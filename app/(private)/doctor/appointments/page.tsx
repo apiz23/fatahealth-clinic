@@ -41,12 +41,23 @@ export default function AppointmentsPage() {
     }, []);
 
     useEffect(() => {
-        const user = JSON.parse(sessionStorage.getItem("user") ?? "{}");
-        setDoctorId(user?.id ?? null);
+        if (typeof window !== "undefined") {
+            const userJson = sessionStorage.getItem("user");
+            if (userJson) {
+                try {
+                    const user = JSON.parse(userJson);
+                    setDoctorId(user?.id ?? null);
+                } catch (err) {
+                    console.error("Failed to parse user from sessionStorage:", err);
+                    setDoctorId(null);
+                }
+            }
+        }
     }, []);
+    
 
     const filteredAppointments = useMemo(() => {
-        if (!doctorId) return appointments; // fallback awal
+        if (!doctorId) return appointments;
 
         switch (filter) {
             case "assigned":

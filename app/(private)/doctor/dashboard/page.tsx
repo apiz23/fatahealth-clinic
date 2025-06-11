@@ -17,39 +17,53 @@ export default function DashboardPage() {
     const [doctorId, setDoctorId] = useState<string | null>(null);
 
     useEffect(() => {
-        const user = JSON.parse(sessionStorage.getItem("user") ?? "{}");
-        setDoctorId(user?.id ?? null);
+        if (typeof window === "undefined") return; // confirm running in browser
 
-        const fetchAppointments = async () => {
-            const { data, error }: SupabaseResponse<Appointment> =
-                await supabase
+        const userJson = sessionStorage.getItem("user");
+        if (!userJson) {
+            setDoctorId(null);
+            return;
+        }
+
+        try {
+            const user = JSON.parse(userJson);
+            setDoctorId(user?.id ?? null);
+
+            // lepas dapat id, baru fetch data
+            const fetchAppointments = async () => {
+                const { data, error } = await supabase
                     .from("fh_visits")
                     .select("*")
-                    .eq("doctor_id", user?.id)
+                    .eq("doctor_id", user.id) // Guna id yang valid
                     .order("scheduled_at", { ascending: true });
 
-            if (error) {
-                console.error("Error fetching appointments:", error);
-                return;
-            }
-            setAppointments(data ?? []);
-        };
+                if (error) {
+                    console.error("Error fetching appointments:", error);
+                    return;
+                }
+                setAppointments(data ?? []);
+            };
 
-        const fetchPatientsCount = async () => {
-            const { count, error } = await supabase
-                .from("fh_patients")
-                .select("*", { count: "exact", head: true });
+            const fetchPatientsCount = async () => {
+                const { count, error } = await supabase
+                    .from("fh_patients")
+                    .select("*", { count: "exact", head: true });
 
-            if (error) {
-                console.error(error);
-                return;
-            }
-            setPatientsCount(count ?? 0);
-        };
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                setPatientsCount(count ?? 0);
+            };
 
-        Promise.all([fetchAppointments(), fetchPatientsCount()]).catch(
-            (error) => console.error("Error during data fetch:", error)
-        );
+            // run kedua-dua fetch serentak
+            Promise.all([fetchAppointments(), fetchPatientsCount()]).catch(
+                console.error
+            );
+        } catch (err) {
+            console.error("Fail parse user JSON:", err);
+            setDoctorId(null);
+        }
     }, []);
 
     // Filter appointments assigned to the current doctor
