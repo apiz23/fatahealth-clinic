@@ -6,18 +6,13 @@ import AppointmentCard from "@/components/appointments/appointment-card";
 import { Calendar, Hospital } from "lucide-react";
 import { Appointment } from "@/interface";
 
-interface SupabaseResponse<T> {
-    data: T[] | null;
-    error: unknown;
-}
-
 export default function DashboardPage() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
     const [patientsCount, setPatientsCount] = useState<number>(0);
     const [doctorId, setDoctorId] = useState<string | null>(null);
 
     useEffect(() => {
-        if (typeof window === "undefined") return; // confirm running in browser
+        if (typeof window === "undefined") return;
 
         const userJson = sessionStorage.getItem("user");
         if (!userJson) {
@@ -29,12 +24,11 @@ export default function DashboardPage() {
             const user = JSON.parse(userJson);
             setDoctorId(user?.id ?? null);
 
-            // lepas dapat id, baru fetch data
             const fetchAppointments = async () => {
                 const { data, error } = await supabase
                     .from("fh_visits")
                     .select("*")
-                    .eq("doctor_id", user.id) // Guna id yang valid
+                    .eq("doctor_id", user.id)
                     .order("scheduled_at", { ascending: true });
 
                 if (error) {
