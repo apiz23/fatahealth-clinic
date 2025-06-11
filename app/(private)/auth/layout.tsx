@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
-import "./globals.css";
+import "../../globals.css";
 import { Toaster } from "sonner";
 
 const poppins = Poppins({
@@ -9,8 +9,8 @@ const poppins = Poppins({
 });
 
 export const metadata: Metadata = {
-    title: "FataHealth",
-    description: "Fatah Clinic Management System",
+    title: "FataHealth Login",
+    description: "Authentication Fatah Clinic Management System",
     icons: {
         icon: [
             {
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
     },
 };
 
-export default function RootLayout({
+export default function PrivateLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
