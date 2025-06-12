@@ -24,12 +24,10 @@ export default function PrescriptionPage() {
     );
     const [patientSearchTerm, setPatientSearchTerm] = useState("");
     const [prescriptionSearchTerm, setPrescriptionSearchTerm] = useState("");
-    const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
 
     useEffect(() => {
         const fetchPatients = async () => {
-            setLoading(true);
             try {
                 let query = supabase.from("fh_patients").select("*");
 
@@ -44,8 +42,6 @@ export default function PrescriptionPage() {
                 setCurrentPage(1);
             } catch (error) {
                 console.error("Error fetching patients:", error);
-            } finally {
-                setLoading(false);
             }
         };
 
