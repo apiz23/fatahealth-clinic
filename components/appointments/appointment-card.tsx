@@ -17,7 +17,7 @@ export default function AppointmentCard({
     index,
 }: AppointmentCardProps) {
     return (
-        <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+        <div className="border rounded-lg p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between shadow-cyan-200">
             <div>
                 <div className="flex justify-between items-start mb-2">
                     <Badge variant="secondary" className="text-xs">
@@ -32,7 +32,7 @@ export default function AppointmentCard({
                                 : appointment.status === "cancelled" ||
                                   appointment.status === null
                                 ? "secondary"
-                                : "secondary" 
+                                : "secondary"
                         }
                         className="text-xs capitalize"
                     >

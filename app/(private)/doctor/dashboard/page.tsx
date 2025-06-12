@@ -51,7 +51,6 @@ export default function DashboardPage() {
                 setPatientsCount(count ?? 0);
             };
 
-            // run kedua-dua fetch serentak
             Promise.all([fetchAppointments(), fetchPatientsCount()]).catch(
                 console.error
             );
@@ -61,12 +60,10 @@ export default function DashboardPage() {
         }
     }, []);
 
-    // Filter appointments assigned to the current doctor
     const assignedAppointments = appointments.filter(
         (appointment) => appointment.doctor_id === doctorId
     );
 
-    // Filter appointments scheduled for today
     const todayAssignedAppointments = assignedAppointments.filter(
         (appointment) => {
             const appointmentDate = new Date(appointment.scheduled_at);
@@ -80,33 +77,33 @@ export default function DashboardPage() {
     );
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-6 ">
             {/* Patient Statistics Card */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 {/* Patients Card */}
-                <div className="flex items-center justify-between bg-white shadow rounded-lg p-6 min-h-[100px]">
+                <div className="flex items-center justify-between rounded-lg p-6 min-h-[100px] bg-white dark:bg-gray-800 shadow dark:shadow-cyan-200/20 border dark:border-gray-700">
                     <div>
-                        <h2 className="text-gray-600 text-sm font-medium uppercase mb-1">
+                        <h2 className="text-gray-600 dark:text-gray-300 text-sm font-medium uppercase mb-1">
                             Patients
                         </h2>
-                        <p className="text-3xl font-semibold text-blue-700">
+                        <p className="text-3xl font-semibold text-blue-700 dark:text-cyan-400">
                             {patientsCount}
                         </p>
                     </div>
-                    <Hospital className="h-10 w-10 text-blue-700" />
+                    <Hospital className="h-10 w-10 text-blue-700 dark:text-cyan-400" />
                 </div>
 
                 {/* Today's Appointments Card */}
-                <div className="flex items-center justify-between bg-white shadow rounded-lg p-6 min-h-[100px]">
+                <div className="flex items-center justify-between rounded-lg p-6 min-h-[100px] bg-white dark:bg-gray-800 shadow dark:shadow-cyan-200/20 border dark:border-gray-700">
                     <div>
-                        <h2 className="text-gray-600 text-sm font-medium uppercase mb-1">
+                        <h2 className="text-gray-600 dark:text-gray-300 text-sm font-medium uppercase mb-1">
                             Appointments Today
                         </h2>
-                        <p className="text-3xl font-semibold text-blue-700">
+                        <p className="text-3xl font-semibold text-blue-700 dark:text-cyan-400">
                             {todayAssignedAppointments.length}
                         </p>
                     </div>
-                    <Calendar className="h-10 w-10 text-blue-700" />
+                    <Calendar className="h-10 w-10 text-blue-700 dark:text-cyan-400" />
                 </div>
             </div>
 

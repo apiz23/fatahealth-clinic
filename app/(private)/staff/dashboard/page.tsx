@@ -4,12 +4,15 @@ import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
 import AppointmentCard from "@/components/appointments/appointment-card";
 import { Appointment } from "@/interface";
+import { Calendar, Hospital } from "lucide-react";
 
 export default function DashboardPage() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
+    const [patientsCount, setPatientsCount] = useState<number>(0);
 
     useEffect(() => {
         fetchAppointments();
+        fetchPatientsCount();
     }, []);
 
     const fetchAppointments = async () => {
@@ -33,6 +36,18 @@ export default function DashboardPage() {
         }
     };
 
+    const fetchPatientsCount = async () => {
+        const { count, error } = await supabase
+            .from("fh_patients")
+            .select("*", { count: "exact", head: true });
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+        setPatientsCount(count ?? 0);
+    };
+
     // Filter today's appointments
     const todayAppointments = appointments.filter((appointment) => {
         const appointmentDate = new Date(appointment.scheduled_at);
@@ -47,22 +62,31 @@ export default function DashboardPage() {
     return (
         <div className="space-y-6">
             {/* Statistics Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                <div className="bg-white shadow rounded-lg p-4">
-                    <h2 className="text-gray-700 font-bold">Patients</h2>
-                    <p className="text-2xl text-blue-700 mt-2">120</p>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                {/* Patients Card */}
+                <div className="flex items-center justify-between rounded-lg p-6 min-h-[100px] bg-white dark:bg-gray-800 shadow dark:shadow-cyan-200/20 border dark:border-gray-700">
+                    <div>
+                        <h2 className="text-gray-600 dark:text-gray-300 text-sm font-medium uppercase mb-1">
+                            Patients
+                        </h2>
+                        <p className="text-3xl font-semibold text-blue-700 dark:text-cyan-400">
+                            {patientsCount}
+                        </p>
+                    </div>
+                    <Hospital className="h-10 w-10 text-blue-700 dark:text-cyan-400" />
                 </div>
-                <div className="bg-white shadow rounded-lg p-4">
-                    <h2 className="text-gray-700 font-bold">
-                        Appointments Today
-                    </h2>
-                    <p className="text-2xl text-blue-700 mt-2">
-                        {todayAppointments.length}
-                    </p>
-                </div>
-                <div className="bg-white shadow rounded-lg p-4">
-                    <h2 className="text-gray-700 font-bold">Prescriptions</h2>
-                    <p className="text-2xl text-blue-700 mt-2">75</p>
+
+                {/* Today's Appointments Card */}
+                <div className="flex items-center justify-between rounded-lg p-6 min-h-[100px] bg-white dark:bg-gray-800 shadow dark:shadow-cyan-200/20 border dark:border-gray-700">
+                    <div>
+                        <h2 className="text-gray-600 dark:text-gray-300 text-sm font-medium uppercase mb-1">
+                            Appointments Today
+                        </h2>
+                        <p className="text-3xl font-semibold text-blue-700 dark:text-cyan-400">
+                            {todayAppointments.length}
+                        </p>
+                    </div>
+                    <Calendar className="h-10 w-10 text-blue-700 dark:text-cyan-400" />
                 </div>
             </div>
 

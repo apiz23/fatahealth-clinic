@@ -132,9 +132,9 @@ export default function PrescriptionList({
                         <div
                             key={p.id}
                             onClick={() => openDialog(p)}
-                            className="bg-white border border-gray-200 rounded-xl shadow p-4 cursor-pointer hover:shadow-lg transition"
+                            className="border dark:border-cyan-200 border-gray-200 rounded-xl shadow p-4 cursor-pointer hover:shadow-lg transition"
                         >
-                            <h3 className="text-lg font-semibold mb-2">
+                            <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">
                                 {p.diagnosis || "No diagnosis"}
                             </h3>
                             <p className="text-sm text-gray-700 mb-1">
@@ -160,18 +160,18 @@ export default function PrescriptionList({
             <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
                 <DialogContent className="sm:max-w-2xl">
                     <DialogHeader>
-                        <DialogTitle className="text-xl">
+                        <DialogTitle className="text-xl text-foreground">
                             Prescription Details
                         </DialogTitle>
                         {selectedPrescription ? (
                             <div className="space-y-4 pt-2">
                                 {/* Diagnosis Section */}
                                 <div className="space-y-2">
-                                    <h4 className="text-sm font-medium text-gray-500">
+                                    <h4 className="text-sm font-medium text-muted-foreground">
                                         Diagnosis
                                     </h4>
-                                    <div className="rounded-md bg-gray-50 p-3">
-                                        <p className="text-gray-900">
+                                    <div className="rounded-md bg-muted p-3">
+                                        <p className="text-foreground">
                                             {selectedPrescription.diagnosis ||
                                                 "No diagnosis recorded"}
                                         </p>
@@ -180,11 +180,11 @@ export default function PrescriptionList({
 
                                 {/* Notes Section */}
                                 <div className="space-y-2">
-                                    <h4 className="text-sm font-medium text-gray-500">
+                                    <h4 className="text-sm font-medium text-muted-foreground">
                                         Doctor{"'"}s Notes
                                     </h4>
-                                    <div className="rounded-md bg-gray-50 p-3">
-                                        <p className="text-gray-900 whitespace-pre-line">
+                                    <div className="rounded-md bg-muted p-3">
+                                        <p className="text-foreground whitespace-pre-line">
                                             {selectedPrescription.notes ||
                                                 "No additional notes"}
                                         </p>
@@ -193,61 +193,63 @@ export default function PrescriptionList({
 
                                 {/* Medicines Section */}
                                 <div className="space-y-2">
-                                    <h4 className="text-sm font-medium text-gray-500">
+                                    <h4 className="text-sm font-medium text-muted-foreground">
                                         Prescribed Medicines
                                     </h4>
                                     {loadingMedicines ? (
                                         <div className="flex items-center justify-center py-8">
-                                            <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                            <span>Loading medicines...</span>
+                                            <Loader2 className="mr-2 h-5 w-5 animate-spin text-muted-foreground" />
+                                            <span className="text-muted-foreground">
+                                                Loading medicines...
+                                            </span>
                                         </div>
                                     ) : medicinesError ? (
-                                        <div className="rounded-md bg-red-50 p-3">
-                                            <p className="text-red-600">
+                                        <div className="rounded-md bg-destructive/10 p-3">
+                                            <p className="text-destructive">
                                                 {medicinesError}
                                             </p>
                                         </div>
                                     ) : medicines.length === 0 ? (
-                                        <div className="rounded-md bg-gray-50 p-3">
-                                            <p className="text-gray-500">
+                                        <div className="rounded-md bg-muted p-3">
+                                            <p className="text-muted-foreground">
                                                 No medicines prescribed
                                             </p>
                                         </div>
                                     ) : (
                                         <div className="overflow-hidden rounded-md border">
-                                            <table className="min-w-full divide-y divide-gray-300">
-                                                <thead className="bg-gray-50">
+                                            <table className="min-w-full divide-y divide-border">
+                                                <thead className="bg-muted">
                                                     <tr>
                                                         <th
                                                             scope="col"
-                                                            className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                            className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
                                                         >
                                                             Medicine
                                                         </th>
                                                         <th
                                                             scope="col"
-                                                            className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                            className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
                                                         >
                                                             Quantity
                                                         </th>
                                                         <th
                                                             scope="col"
-                                                            className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                                                            className="px-4 py-3 text-left text-xs font-medium text-muted-foreground uppercase tracking-wider"
                                                         >
                                                             Price (RM) / Pack
                                                         </th>
                                                     </tr>
                                                 </thead>
-                                                <tbody className="divide-y divide-gray-200 bg-white">
+                                                <tbody className="divide-y divide-border bg-background">
                                                     {medicines.map((med) => (
                                                         <tr key={med.id}>
-                                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-gray-900">
+                                                            <td className="whitespace-nowrap px-4 py-3 text-sm font-medium text-foreground">
                                                                 {med.name}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
+                                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-muted-foreground">
                                                                 {med.quantity}
                                                             </td>
-                                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-gray-500">
+                                                            <td className="whitespace-nowrap px-4 py-3 text-sm text-muted-foreground">
                                                                 {med.price_at_prescription?.toFixed(
                                                                     2
                                                                 )}
@@ -262,8 +264,10 @@ export default function PrescriptionList({
                             </div>
                         ) : (
                             <div className="flex items-center justify-center py-8">
-                                <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                <span>Loading prescription details...</span>
+                                <Loader2 className="mr-2 h-5 w-5 animate-spin text-muted-foreground" />
+                                <span className="text-muted-foreground">
+                                    Loading prescription details...
+                                </span>
                             </div>
                         )}
                     </DialogHeader>

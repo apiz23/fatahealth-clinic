@@ -9,12 +9,10 @@ import {
     IconUser,
     IconCalendar,
     IconClipboardText,
-    IconSearch,
     IconReportAnalytics,
 } from "@tabler/icons-react";
 
 import { NavMain } from "@/components/auth-sidebar/nav-main";
-import { NavSecondary } from "@/components/auth-sidebar/nav-secondary";
 import { NavUser } from "@/components/auth-sidebar/nav-user";
 import {
     Sidebar,
@@ -59,7 +57,6 @@ const navConfig = {
             icon: IconReportAnalytics,
         },
     ],
-    secondary: [{ title: "Search", url: "/search", icon: IconSearch }],
 };
 
 export function AppSidebar() {
@@ -166,7 +163,6 @@ export function AppSidebar() {
                         onClick: () => setActiveTitle(item.title),
                     }))}
                 />
-                <NavSecondary items={navConfig.secondary} className="mt-auto" />
             </SidebarContent>
 
             <SidebarFooter>

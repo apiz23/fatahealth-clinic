@@ -63,7 +63,7 @@ export default function PrescriptionPage() {
 						<div
 							key={patient.id}
 							className={`flex flex-col p-4 rounded-lg shadow cursor-pointer ${
-								selectedPatient?.id === patient.id ? "bg-blue-100" : "bg-white"
+								selectedPatient?.id === patient.id ? "border border-cyan-200" : "bg-white dark:bg-black border border-white"
 							}`}
 							onClick={() => setSelectedPatient(patient)}
 						>
@@ -73,7 +73,7 @@ export default function PrescriptionPage() {
 										{patient.name.charAt(0).toUpperCase()}
 									</span>
 								</div>
-								<p className="font-semibold text-lg">{patient.name}</p>
+								<p className="font-semibold text-lg text-white">{patient.name}</p>
 							</div>
 							<div className="text-sm text-gray-600 space-y-1">
 								<p>IC: {patient.ic}</p>

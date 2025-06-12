@@ -54,7 +54,7 @@ export default function PatientCardList({ patients }: { patients: Patient[] }) {
                 patients.map((patient) => (
                     <Card
                         key={patient.id}
-                        className="hover:shadow-md transition-shadow"
+                        className="hover:shadow-md transition-shadow dark:shadow-cyan-200 "
                     >
                         <CardHeader className="flex flex-row items-start gap-4 pb-3">
                             <Avatar className="h-12 w-12">
