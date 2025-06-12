@@ -20,7 +20,7 @@ export default function StaffAppointmentsPage() {
 
     const fetchAppointments = async () => {
         const { data, error } = await supabase
-            .from("fh_visits")
+            .from("fh_appointments")
             .select("*")
             .order("scheduled_at", { ascending: true });
 

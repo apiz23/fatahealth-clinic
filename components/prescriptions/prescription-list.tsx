@@ -137,20 +137,22 @@ export default function PrescriptionList({
                             <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">
                                 {p.diagnosis || "No diagnosis"}
                             </h3>
-                            <p className="text-sm text-gray-700 mb-1">
-                                <b>Notes:</b> {p.notes || "N/A"}
-                            </p>
-                            <p className="text-sm text-gray-700 mb-1">
-                                <b>Date:</b>{" "}
-                                {p.created_at
-                                    ? new Date(
-                                          p.created_at
-                                      ).toLocaleDateString()
-                                    : "N/A"}
-                            </p>
-                            <p className="text-sm text-gray-700">
-                                <b>Status:</b> {p.status || "Active"}
-                            </p>
+                            <div className="dark:text-gray-200">
+                                <p className="text-sm mb-1">
+                                    <b>Notes:</b> {p.notes || "N/A"}
+                                </p>
+                                <p className="text-sm mb-1">
+                                    <b>Date:</b>{" "}
+                                    {p.created_at
+                                        ? new Date(
+                                              p.created_at
+                                          ).toLocaleDateString()
+                                        : "N/A"}
+                                </p>
+                                <p className="text-sm">
+                                    <b>Status:</b> {p.status || "Active"}
+                                </p>
+                            </div>
                         </div>
                     ))}
                 </div>

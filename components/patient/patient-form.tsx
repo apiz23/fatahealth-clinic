@@ -222,18 +222,6 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
                         </div>
 
                         <div className="space-y-2">
-                            <Label htmlFor="phone">Alternate Phone</Label>
-                            <Input
-                                id="phone"
-                                value={formData.phone}
-                                onChange={(e) =>
-                                    handleChange("phone", e.target.value)
-                                }
-                                placeholder="+60198765432"
-                            />
-                        </div>
-
-                        <div className="space-y-2">
                             <Label htmlFor="emergency_contact">
                                 Emergency Contact
                             </Label>

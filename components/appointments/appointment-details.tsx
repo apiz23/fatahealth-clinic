@@ -80,7 +80,7 @@ export default function AppointmentDetails({
         const toastId = toast.loading("Saving…");
 
         const { error } = await supabase
-            .from("fh_visits")
+            .from("fh_appointments")
             .update({
                 status,
                 remarks,

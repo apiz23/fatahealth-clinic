@@ -24,7 +24,7 @@ export default function AppointmentsPage() {
     useEffect(() => {
         const fetchAppointments = async () => {
             const { data, error } = await supabase
-                .from("fh_visits")
+                .from("fh_appointments")
                 .select("*")
                 .order("scheduled_at", { ascending: true });
 
@@ -48,13 +48,15 @@ export default function AppointmentsPage() {
                     const user = JSON.parse(userJson);
                     setDoctorId(user?.id ?? null);
                 } catch (err) {
-                    console.error("Failed to parse user from sessionStorage:", err);
+                    console.error(
+                        "Failed to parse user from sessionStorage:",
+                        err
+                    );
                     setDoctorId(null);
                 }
             }
         }
     }, []);
-    
 
     const filteredAppointments = useMemo(() => {
         if (!doctorId) return appointments;

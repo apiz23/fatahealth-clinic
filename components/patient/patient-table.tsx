@@ -263,7 +263,7 @@ export default function PatientCardList({ patients }: { patients: Patient[] }) {
                                                                         key={
                                                                             index
                                                                         }
-                                                                        className="border rounded-lg p-4 hover:bg-gray-50 transition-colors"
+                                                                        className="border rounded-lg p-4 hover:bg-gray-900 transition-colors"
                                                                     >
                                                                         <div className="flex justify-between items-start mb-2">
                                                                             <div>
