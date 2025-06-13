@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import supabase from "@/lib/supabase";
 import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
@@ -28,10 +28,17 @@ type FormData = {
     blood_type: string;
     emergency_contact: string;
     status: string;
+    appointment_id: string;
 };
 
 type PatientFormProps = {
     onSuccess?: () => void;
+};
+
+type AppointmentOption = {
+    id: string;
+    name: string;
+    scheduled_at: string;
 };
 
 export default function PatientForm({ onSuccess }: PatientFormProps) {
@@ -46,12 +53,30 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
         blood_type: "",
         emergency_contact: "",
         status: "active",
+        appointment_id: "",
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleChange = (field: keyof FormData, value: string) => {
         setFormData((prev) => ({ ...prev, [field]: value }));
     };
+
+    const [appointments, setAppointments] = useState<AppointmentOption[]>([]);
+
+    useEffect(() => {
+        const fetchAppointments = async () => {
+            const { data, error } = await supabase
+                .from("fh_appointments")
+                .select("id, name, scheduled_at")
+                .order("scheduled_at", { ascending: true });
+
+            if (!error && data) {
+                setAppointments(data);
+            }
+        };
+
+        fetchAppointments();
+    }, []);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -75,6 +100,7 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
                 blood_type: formData.blood_type,
                 emergency_contact: formData.emergency_contact,
                 status: formData.status,
+                appointment_id: formData.appointment_id || null,
             });
 
             if (error) throw error;
@@ -91,6 +117,7 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
                 blood_type: "",
                 emergency_contact: "",
                 status: "active",
+                appointment_id: "",
             });
 
             if (onSuccess) onSuccess();
@@ -106,9 +133,36 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
         <div className="p-4">
             <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="space-y-4">
-                    <h3 className="text-lg font-medium">
-                        Personal Information
-                    </h3>
+                    <div className="flex justify-between">
+                        <h3 className="text-lg font-medium">
+                            Personal Information
+                        </h3>
+                        <div className="space-y-2">
+                            <Label htmlFor="appointment">
+                                Associated Appointment
+                            </Label>
+                            <Select
+                                value={formData.appointment_id}
+                                onValueChange={(value) =>
+                                    handleChange("appointment_id", value)
+                                }
+                            >
+                                <SelectTrigger>
+                                    <SelectValue placeholder="Select appointment" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {appointments.map((apt) => (
+                                        <SelectItem key={apt.id} value={apt.id}>
+                                            {`${apt.name} (${new Date(
+                                                apt.scheduled_at
+                                            ).toLocaleString()})`}
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                    </div>
+
                     <Separator />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div className="space-y-2">

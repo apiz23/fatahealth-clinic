@@ -14,8 +14,34 @@ import {
 import { Stethoscope, HeartPulse, Microscope, PhoneCall } from "lucide-react";
 import { HeroHeader } from "@/components/header";
 import Footer from "@/components/footer";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/dist/ScrollTrigger";
+import Lenis from "@studio-freight/lenis";
+import { useEffect, useRef } from "react";
 
 export default function Home() {
+    const lenisRef = useRef<Lenis | null>(null);
+
+    useEffect(() => {
+        gsap.registerPlugin(ScrollTrigger);
+
+        const lenis = new Lenis();
+        lenisRef.current = lenis;
+
+        lenis.on("scroll", ScrollTrigger.update);
+
+        const raf = (time: number) => {
+            lenis.raf(time * 1000);
+        };
+        gsap.ticker.add(raf);
+        gsap.ticker.lagSmoothing(0);
+
+        return () => {
+            gsap.ticker.remove(raf);
+            lenis.destroy();
+        };
+    }, []);
+
     const specialties = [
         { name: "General Medicine", icon: <Stethoscope className="w-6 h-6" /> },
         { name: "Cardiology", icon: <HeartPulse className="w-6 h-6" /> },
@@ -87,7 +113,10 @@ export default function Home() {
                 </div>
             </section>
             {/* Specialties Section */}
-            <section className="py-20 bg-gray-50 dark:bg-gray-900" id="specialize">
+            <section
+                className="py-20 bg-gray-50 dark:bg-gray-900"
+                id="specialize"
+            >
                 <div className="mx-auto max-w-6xl px-6">
                     <h2 className="text-3xl font-bold text-center mb-12">
                         Our Specialties
@@ -163,7 +192,7 @@ export default function Home() {
                                 <Link href="/about">Learn More</Link>
                             </Button>
                         </div>
-                        <div className="flex justify-center">
+                        <div className="flex justify-end">
                             <div className="w-64 h-64 bg-primary/10 rounded-full flex items-center justify-center">
                                 <Stethoscope className="w-16 h-16 text-primary" />
                             </div>
