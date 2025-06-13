@@ -230,7 +230,7 @@ export function MedicineDetails({ medicine }: MedicineDetailsProps) {
 								setFormData((prev) => ({ ...prev, expiry_date: formatted }));
 							}
 						}}
-						className="rounded-md border bg-white w-fit mx-auto"
+						className="rounded-md border w-fit mx-auto"
 					/>
 				</div>
 			</div>
