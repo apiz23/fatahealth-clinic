@@ -139,7 +139,7 @@ export default function AppointmentPage() {
     };
 
     return (
-        <div className="bg-gradient-to-b from-primary/5 to-white pb-20">
+        <div className="pb-20">
             <div className="mx-auto px-4">
                 <div className="flex justify-start p-4">
                     <Link href="/" className="group">
@@ -156,7 +156,7 @@ export default function AppointmentPage() {
                     </Link>
                 </div>
 
-                <div className="max-w-3xl mx-auto p-6 md:p-8 bg-white rounded-xl shadow-sm border border-gray-100">
+                <div className="max-w-3xl mx-auto p-6 md:p-8 rounded-xl shadow-sm border border-gray-100">
                     <div className="flex flex-col items-center mb-8">
                         <Image
                             src={fhLogo}
@@ -164,7 +164,7 @@ export default function AppointmentPage() {
                             className="h-24 w-auto"
                             priority
                         />
-                        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-900 mb-2">
+                        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-100 my-2">
                             Book an Appointment
                         </h1>
                         <p className="text-gray-600 text-center max-w-md">

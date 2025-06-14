@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { CMD } from "@/components/cmd";
+import { ThemeProvider } from "@/provider/theme-provider";
 
 const poppins = Poppins({
     weight: "500",
@@ -30,7 +32,15 @@ export default function RootLayout({
         <html lang="en">
             <body className={`${poppins.className} antialiased`}>
                 <Toaster richColors />
-                {children}
+                <CMD />
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    enableSystem
+                    disableTransitionOnChange
+                >
+                    {children}
+                </ThemeProvider>
             </body>
         </html>
     );

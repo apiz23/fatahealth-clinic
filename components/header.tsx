@@ -42,17 +42,17 @@ export const HeroHeader = () => {
                             <Link
                                 href="/"
                                 aria-label="home"
-                                className="flex items-center space-x-2"
+                                className="flex items-center space-x-4"
                             >
                                 <Image
                                     src={fhLogo}
                                     alt={"logo"}
                                     className="h-10 w-10"
                                 />
+                                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                                    FataHealth Clinic
+                                </h3>
                             </Link>
-                            <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-                                FataHealth Clinic
-                            </h3>
 
                             <div className="lg:hidden">
                                 <Drawer>
@@ -75,7 +75,11 @@ export const HeroHeader = () => {
 
                         <div className="hidden w-full flex-wrap items-center justify-end space-y-8 lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0">
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <Button asChild size="sm">
+                                <Button
+                                    asChild
+                                    size="sm"
+                                    className="dark:bg-cyan-200 dark:text-neutral-900 dark:hover:bg-cyan-300"
+                                >
                                     <Link href="/appointment">
                                         <span className="capitalize">
                                             book your appointment

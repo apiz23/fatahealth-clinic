@@ -89,23 +89,38 @@ export default function PatientForm({ onSuccess }: PatientFormProps) {
         setIsSubmitting(true);
 
         try {
-            const { error } = await supabase.from("fh_patients").insert({
-                name: formData.name,
-                ic: formData.ic,
-                email: formData.email,
-                phone_number: formData.phone_number,
-                phone: formData.phone,
-                address: formData.address,
-                gender: formData.gender,
-                blood_type: formData.blood_type,
-                emergency_contact: formData.emergency_contact,
-                status: formData.status,
-                appointment_id: formData.appointment_id || null,
-            });
+            const { data, error } = await supabase
+                .from("fh_patients")
+                .insert({
+                    name: formData.name,
+                    ic: formData.ic,
+                    email: formData.email,
+                    phone_number: formData.phone_number,
+                    phone: formData.phone,
+                    address: formData.address,
+                    gender: formData.gender,
+                    blood_type: formData.blood_type,
+                    emergency_contact: formData.emergency_contact,
+                    status: formData.status,
+                })
+                .select("id")
+                .single();
 
             if (error) throw error;
 
+            const patientId = data.id;
+
+            if (formData.appointment_id) {
+                const { error: updateError } = await supabase
+                    .from("fh_appointments")
+                    .update({ patient_id: patientId })
+                    .eq("id", formData.appointment_id);
+
+                if (updateError) throw updateError;
+            }
+
             toast.success("Patient added successfully");
+
             setFormData({
                 name: "",
                 ic: "",
