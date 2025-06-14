@@ -6,7 +6,6 @@ import { NavigationProvider } from "@/provider/nav-provider";
 import { AppSidebar } from "@/components/auth-sidebar/app-sidebar";
 import { SiteHeader } from "@/components/auth-sidebar/site-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
-import { ThemeProvider } from "@/provider/theme-provider";
 import { SessionProvider } from "@/provider/session-provider";
 
 const poppins = Poppins({
@@ -43,16 +42,8 @@ export default function DoctorLayout({
                             <SiteHeader />
                             <div className="p-6">
                                 <Toaster richColors />
-                                <ThemeProvider
-                                    attribute="class"
-                                    defaultTheme="dark"
-                                    enableSystem
-                                    disableTransitionOnChange
-                                >
-                                    <SessionProvider>
-                                        {children}
-                                    </SessionProvider>
-                                </ThemeProvider>
+
+                                <SessionProvider>{children}</SessionProvider>
                             </div>
                         </SidebarInset>
                     </NavigationProvider>

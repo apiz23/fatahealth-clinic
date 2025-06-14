@@ -7,7 +7,6 @@ import { AppSidebar } from "@/components/auth-sidebar/app-sidebar";
 import { SiteHeader } from "@/components/auth-sidebar/site-header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { SessionProvider } from "@/provider/session-provider";
-import { ThemeProvider } from "@/provider/theme-provider";
 
 const poppins = Poppins({
     weight: "500",
@@ -42,16 +41,7 @@ export default function DoctorLayout({
                         <SidebarInset>
                             <SiteHeader />
                             <div className="p-6">
-                                <ThemeProvider	
-                                    attribute="class"
-                                    defaultTheme="dark"
-                                    enableSystem
-                                    disableTransitionOnChange
-                                >
-                                    <SessionProvider>
-                                        {children}
-                                    </SessionProvider>
-                                </ThemeProvider>
+                                <SessionProvider>{children}</SessionProvider>
                             </div>
                         </SidebarInset>
                     </NavigationProvider>
