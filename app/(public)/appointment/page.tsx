@@ -167,7 +167,7 @@ export default function AppointmentPage() {
                         <h1 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-gray-100 my-2">
                             Book an Appointment
                         </h1>
-                        <p className="text-gray-600 text-center max-w-md">
+                        <p className="dark:text-gray-300 text-gray-600 text-center max-w-md">
                             Fill out the form below to schedule your appointment
                             with us.
                         </p>

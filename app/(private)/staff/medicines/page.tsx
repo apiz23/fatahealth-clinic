@@ -55,7 +55,13 @@ export default function SupplierPage() {
                     placeholder="Search medicines by name, supplier or category..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="md:w-[500px]"
+                    className="md:w-[500px] max-w-sm transition-all duration-200
+                    bg-background text-foreground
+                    border border-input hover:border-primary/50
+                    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                    dark:bg-background dark:text-foreground
+                    dark:border-input dark:hover:border-primary/70
+                    dark:focus-visible:ring-primary/80 dark:focus-visible:ring-offset-background"
                 />
                 <AddMedicineSheet onMedicineAdded={handleMedicineAdded} />
             </div>

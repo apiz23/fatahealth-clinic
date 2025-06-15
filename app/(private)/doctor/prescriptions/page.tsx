@@ -62,7 +62,13 @@ export default function PrescriptionPage() {
                     placeholder="Search patients by name"
                     value={patientSearchTerm}
                     onChange={(e) => setPatientSearchTerm(e.target.value)}
-                    className="w-full md:w-[300px]"
+                    className="w-full md:w-[300px] transition-all duration-200
+                    bg-background text-foreground
+                    border border-input hover:border-primary/50
+                    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                    dark:bg-background dark:text-foreground
+                    dark:border-input dark:hover:border-primary/70
+                    dark:focus-visible:ring-primary/80 dark:focus-visible:ring-offset-background"
                 />
             </div>
 
@@ -72,7 +78,7 @@ export default function PrescriptionPage() {
                         {paginatedPatients.map((patient) => (
                             <div
                                 key={patient.id}
-                                className={`flex flex-col p-4 rounded-lg shadow cursor-pointer bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900/50 border-gray-200 dark:border-neutral-700" ${
+                                className={`flex flex-col p-4 rounded-lg shadow cursor-pointer bg-gradient-to-b from-neutral-50 dark:from-neutral-900 to-neutral-100 dark:to-neutral-900/5 border-2 dark:border-neutral-700" ${
                                     selectedPatient?.id === patient.id
                                         ? "border border-cyan-200"
                                         : ""

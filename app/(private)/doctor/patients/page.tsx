@@ -53,7 +53,13 @@ export default function Page() {
                     placeholder="Search by name, email, or phone"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="max-w-sm"
+                    className="max-w-sm transition-all duration-200
+                    bg-background text-foreground
+                    border border-input hover:border-primary/50
+                    focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2
+                    dark:bg-background dark:text-foreground
+                    dark:border-input dark:hover:border-primary/70
+                    dark:focus-visible:ring-primary/80 dark:focus-visible:ring-offset-background"
                 />
                 <Button onClick={() => setIsSheetOpen(true)}>
                     Add New Patient

@@ -8,7 +8,6 @@ import { cn } from "@/lib/utils";
 import {
     Drawer,
     DrawerContent,
-    DrawerDescription,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
@@ -22,7 +21,7 @@ export const HeroHeader = () => {
 
     React.useEffect(() => {
         const handleScroll = () => {
-            setIsScrolled(window.scrollY > 50);
+            setIsScrolled(window.scrollY > 10);
         };
         window.addEventListener("scroll", handleScroll);
         return () => window.removeEventListener("scroll", handleScroll);
@@ -32,63 +31,85 @@ export const HeroHeader = () => {
         <header>
             <nav
                 className={cn(
-                    "fixed z-20 w-full transition-all duration-300",
-                    isScrolled &&
-                        "bg-background/75 border-b border-black/5 backdrop-blur-lg"
+                    "fixed z-50 w-full transition-all duration-300",
+                    isScrolled
+                        ? "bg-background/90 border-b border-border/50 backdrop-blur-md"
+                        : "bg-background/50"
                 )}
             >
-                <div className="mx-auto max-w-5xl px-6">
-                    <div className="relative flex flex-wrap items-center justify-between gap-6 py-3 lg:gap-0">
-                        <div className="flex w-full justify-between gap-6 lg:w-auto py-2">
+                <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+                    <div className="flex h-16 items-center justify-between">
+                        {/* Logo and Brand */}
+                        <div className="flex items-center">
                             <Link
                                 href="/"
-                                aria-label="home"
-                                className="flex items-center space-x-4"
+                                className="flex items-center gap-3"
+                                aria-label="Home"
                             >
                                 <Image
                                     src={fhLogo}
-                                    alt={"logo"}
-                                    className="h-10 w-10"
+                                    alt="FataHealth Clinic Logo"
+                                    className="h-8 w-8"
+                                    priority
                                 />
-                                <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
+                                <span className="text-xl font-semibold tracking-tight text-foreground">
                                     FataHealth Clinic
-                                </h3>
+                                </span>
                             </Link>
-
-                            <div className="lg:hidden">
-                                <Drawer>
-                                    <DrawerTrigger asChild>
-                                        <Button>
-                                            <Menu />
-                                        </Button>
-                                    </DrawerTrigger>
-                                    <DrawerContent>
-                                        <DrawerHeader>
-                                            <DrawerTitle>Menu</DrawerTitle>
-                                            <DrawerDescription>
-                                                Navigate through our website
-                                            </DrawerDescription>
-                                        </DrawerHeader>
-                                    </DrawerContent>
-                                </Drawer>
-                            </div>
                         </div>
 
-                        <div className="hidden w-full flex-wrap items-center justify-end space-y-8 lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0">
-                            <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
-                                <ModeToggle />
-                                <Button
-                                    asChild
-                                    size="sm"
-                                    className="dark:bg-cyan-200 dark:text-neutral-900 dark:hover:bg-cyan-300"
-                                >
-                                    <Link href="/appointment">
-                                        <span className="capitalize">
-                                            book your appointment
+                        {/* Desktop Navigation */}
+                        <div className="hidden items-center gap-6 md:flex">
+                            <ModeToggle />
+                            <Button
+                                asChild
+                                size="sm"
+                                className="bg-primary hover:bg-primary/90 text-primary-foreground shadow transition-colors"
+                            >
+                                <Link href="/appointment">
+                                    Book Appointment
+                                </Link>
+                            </Button>
+                        </div>
+
+                        {/* Mobile Menu Button */}
+                        <div className="flex items-center gap-2 md:hidden">
+                            <ModeToggle />
+                            <Drawer direction="bottom">
+                                <DrawerTrigger asChild>
+                                    <Button variant="ghost" size="icon">
+                                        <Menu className="h-5 w-5" />
+                                        <span className="sr-only">
+                                            Open menu
                                         </span>
-                                    </Link>
-                                </Button>
-                            </div>
+                                    </Button>
+                                </DrawerTrigger>
+                                <DrawerContent className="w-full rounded-t-2xl bg-background dark:bg-neutral-900 border-t border-border/50">
+                                    <DrawerHeader className="text-left">
+                                        <DrawerTitle className="text-lg">
+                                            FataHealth Clinic Menu
+                                        </DrawerTitle>
+                                    </DrawerHeader>
+                                    <div className="p-4 space-y-4">
+                                        <Button
+                                            asChild
+                                            className="w-full"
+                                            size="sm"
+                                        >
+                                            <Link href="/appointment">
+                                                Book Appointment
+                                            </Link>
+                                        </Button>
+                                        <Button
+                                            asChild
+                                            className="w-full"
+                                            size="sm"
+                                        >
+                                            <Link href="/payment">Payment</Link>
+                                        </Button>
+                                    </div>
+                                </DrawerContent>
+                            </Drawer>
                         </div>
                     </div>
                 </div>

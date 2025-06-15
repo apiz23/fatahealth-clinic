@@ -329,13 +329,36 @@ export default function DashboardPage() {
                             </div>
                         )}
                     </CardContent>
-                    <CardFooter className="flex justify-between items-center">
-                        <div className="text-sm text-muted-foreground">
-                            Last 3 months comparison
-                        </div>
-                        <div className="flex items-center gap-1 text-sm font-medium text-green-600 dark:text-green-400">
-                            <TrendingUp className="h-4 w-4" />
-                            <span>5.2% increase</span>
+                    <CardFooter className="px-4 py-3 border-t">
+                        <div className="flex flex-col w-full gap-2">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className="text-muted-foreground">
+                                            Total Patients:
+                                        </span>
+                                        <span className="font-medium text-foreground">
+                                            {totalPatients}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className="text-muted-foreground">
+                                            Monthly Average:
+                                        </span>
+                                        <span className="font-medium text-foreground">
+                                            {(
+                                                totalPatients /
+                                                patientsCountPerMonth.length
+                                            ).toFixed(1)}
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-1 px-2 py-1 bg-primary/10 rounded-md text-primary text-sm font-medium">
+                                    <TrendingUp className="h-4 w-4" />
+                                    <span>More patients this month</span>
+                                </div>
+                            </div>
                         </div>
                     </CardFooter>
                 </Card>

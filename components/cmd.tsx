@@ -15,7 +15,10 @@ export function CMD() {
     const [open, setOpen] = React.useState(false);
     const router = useRouter();
 
-    const commands = [{ label: "Log In", path: "/auth" }];
+    const commands = [
+        { label: "Log In", path: "/auth" },
+        { label: "Home", path: "/" },
+    ];
 
     React.useEffect(() => {
         const down = (e: KeyboardEvent) => {

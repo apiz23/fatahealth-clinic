@@ -255,13 +255,36 @@ export default function DashboardPage() {
                             </ResponsiveContainer>
                         </ChartContainer>
                     </CardContent>
+                    <CardFooter className="px-4 py-3 border-t">
+                        <div className="flex flex-col w-full gap-2">
+                            <div className="flex justify-between items-start">
+                                <div className="space-y-1">
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className="text-muted-foreground">
+                                            Total Patients:
+                                        </span>
+                                        <span className="font-medium text-foreground">
+                                            {totalPatients}
+                                        </span>
+                                    </div>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <span className="text-muted-foreground">
+                                            Monthly Average:
+                                        </span>
+                                        <span className="font-medium text-foreground">
+                                            {(
+                                                totalPatients /
+                                                patientsCountPerMonth.length
+                                            ).toFixed(1)}
+                                        </span>
+                                    </div>
+                                </div>
 
-                    <CardFooter className="flex-col items-start gap-1 text-sm">
-                        <div className="flex gap-1 font-medium">
-                            Trending up 5.2% <TrendingUp className="h-4 w-4" />
-                        </div>
-                        <div className="text-muted-foreground">
-                            (Prev - Current - Next)
+                                <div className="flex items-center gap-1 px-2 py-1 bg-primary/10 rounded-md text-primary text-sm font-medium">
+                                    <TrendingUp className="h-4 w-4" />
+                                    <span>More patients this month</span>
+                                </div>
+                            </div>
                         </div>
                     </CardFooter>
                 </Card>

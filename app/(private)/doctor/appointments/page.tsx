@@ -12,6 +12,7 @@ import {
     SelectValue,
 } from "@/components/ui/select";
 import { Appointment } from "@/interface";
+import { Input } from "@/components/ui/input";
 
 export default function AppointmentsPage() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -20,6 +21,7 @@ export default function AppointmentsPage() {
     );
     const [error, setError] = useState<string | null>(null);
     const [doctorId, setDoctorId] = useState<string | null>(null);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchAppointments = async () => {
@@ -59,42 +61,66 @@ export default function AppointmentsPage() {
     }, []);
 
     const filteredAppointments = useMemo(() => {
-        if (!doctorId) return appointments;
+        let filtered = appointments;
 
-        switch (filter) {
-            case "assigned":
-                return appointments.filter((a) => a.doctor_id === doctorId);
-            case "unassigned":
-                return appointments.filter((a) => a.doctor_id == null);
-            default:
-                return appointments;
+        if (doctorId) {
+            if (filter === "assigned") {
+                filtered = filtered.filter((a) => a.doctor_id === doctorId);
+            } else if (filter === "unassigned") {
+                filtered = filtered.filter((a) => a.doctor_id == null);
+            }
         }
-    }, [appointments, filter, doctorId]);
+        if (searchTerm.trim() !== "") {
+            const lower = searchTerm.toLowerCase();
+            filtered = filtered.filter(
+                (a) =>
+                    a.name.toLowerCase().includes(lower) ||
+                    a.email.toLowerCase().includes(lower) ||
+                    a.phone.toLowerCase().includes(lower) ||
+                    a.type?.toLowerCase().includes(lower) ||
+                    a.message.toLowerCase().includes(lower)
+            );
+        }
+
+        return filtered;
+    }, [appointments, filter, doctorId, searchTerm]);
 
     if (error) return <div>{error}</div>;
 
     return (
         <>
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between mb-6">
                 <div className="text-sm text-muted-foreground">
-                    {filteredAppointments.length} appointments
+                    <Input
+                        type="text"
+                        placeholder="Search by patient, doctor or category..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        className="w-full md:w-[400px] px-4 py-2 border rounded-md bg-white dark:bg-neutral-900 text-sm text-foreground placeholder:text-muted-foreground"
+                    />
                 </div>
 
-                <Select
-                    value={filter}
-                    onValueChange={(value) =>
-                        setFilter(value as "all" | "assigned" | "unassigned")
-                    }
-                >
-                    <SelectTrigger className="w-[180px]">
-                        <SelectValue placeholder="Filter appointments" />
-                    </SelectTrigger>
-                    <SelectContent>
-                        <SelectItem value="all">All</SelectItem>
-                        <SelectItem value="assigned">Assigned</SelectItem>
-                        <SelectItem value="unassigned">Unassigned</SelectItem>
-                    </SelectContent>
-                </Select>
+                <div className="flex flex-col md:flex-row gap-4 w-full md:w-auto">
+                    <Select
+                        value={filter}
+                        onValueChange={(value) =>
+                            setFilter(
+                                value as "all" | "assigned" | "unassigned"
+                            )
+                        }
+                    >
+                        <SelectTrigger className="w-[180px]">
+                            <SelectValue placeholder="Filter appointments" />
+                        </SelectTrigger>
+                        <SelectContent>
+                            <SelectItem value="all">All</SelectItem>
+                            <SelectItem value="assigned">Assigned</SelectItem>
+                            <SelectItem value="unassigned">
+                                Unassigned
+                            </SelectItem>
+                        </SelectContent>
+                    </Select>
+                </div>
             </div>
 
             <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">

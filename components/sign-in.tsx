@@ -173,24 +173,6 @@ export function SignInForm({
                     </form>
                 </CardContent>
             </Card>
-
-            <div className="text-balance text-center text-xs text-muted-foreground">
-                By continuing, you agree to HealthSync{"'"}s
-                <Link
-                    href="/terms"
-                    className="text-blue-600 hover:text-blue-800 underline underline-offset-4"
-                >
-                    Terms of Service
-                </Link>
-                and
-                <Link
-                    href="/privacy"
-                    className="text-blue-600 hover:text-blue-800 underline underline-offset-4"
-                >
-                    Privacy Policy
-                </Link>
-                .
-            </div>
         </div>
     );
 }
