@@ -55,7 +55,7 @@ export default function PrescriptionPage() {
     );
 
     return (
-        <div className="p-6 space-y-6">
+        <div className="space-y-6">
             <div className="flex flex-col md:flex-row gap-4 items-start md:items-end">
                 <Input
                     type="text"
@@ -72,10 +72,10 @@ export default function PrescriptionPage() {
                         {paginatedPatients.map((patient) => (
                             <div
                                 key={patient.id}
-                                className={`flex flex-col p-4 rounded-lg shadow cursor-pointer ${
+                                className={`flex flex-col p-4 rounded-lg shadow cursor-pointer bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900/50 border-gray-200 dark:border-neutral-700" ${
                                     selectedPatient?.id === patient.id
-                                        ? "border border-cyan-200 bg-cyan-900"
-                                        : "bg-white dark:bg-black shadow shadow-cyan-200"
+                                        ? "border border-cyan-200"
+                                        : ""
                                 }`}
                                 onClick={() => setSelectedPatient(patient)}
                             >
@@ -87,7 +87,7 @@ export default function PrescriptionPage() {
                                                 .toUpperCase()}
                                         </span>
                                     </div>
-                                    <p className="font-semibold text-lg text-white">
+                                    <p className="font-semibold text-lg text-black dark:text-white">
                                         {patient.name}
                                     </p>
                                 </div>
@@ -161,10 +161,12 @@ export default function PrescriptionPage() {
                         className="w-full md:w-1/2"
                     />
 
-                    <PrescriptionList
-                        patientId={selectedPatient.id}
-                        searchTerm={prescriptionSearchTerm}
-                    />
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <PrescriptionList
+                            patientId={selectedPatient.id}
+                            searchTerm={prescriptionSearchTerm}
+                        />
+                    </div>
                 </div>
             )}
         </div>

@@ -164,7 +164,7 @@ export default function AppointmentPage() {
                             className="h-24 w-auto"
                             priority
                         />
-                        <h1 className="text-3xl md:text-4xl font-bold text-center text-gray-100 my-2">
+                        <h1 className="text-3xl md:text-4xl font-bold text-center text-black dark:text-gray-100 my-2">
                             Book an Appointment
                         </h1>
                         <p className="text-gray-600 text-center max-w-md">

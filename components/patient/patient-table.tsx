@@ -30,6 +30,7 @@ import {
     LetterText,
     TriangleAlert,
 } from "lucide-react";
+import PrescriptionList from "../prescriptions/prescription-list";
 
 export default function PatientCardList({ patients }: { patients: Patient[] }) {
     const [bills, setBills] = useState<Bill[]>([]);
@@ -54,7 +55,7 @@ export default function PatientCardList({ patients }: { patients: Patient[] }) {
                 patients.map((patient) => (
                     <Card
                         key={patient.id}
-                        className="hover:shadow-md transition-shadow dark:shadow-cyan-200 "
+                        className="rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between bg-gradient-to-b from-neutral-50 dark:from-neutral-900 to-neutral-100 dark:to-neutral-900/5 border-2 dark:border-neutral-700"
                     >
                         <CardHeader className="flex flex-row items-start gap-4 pb-3">
                             <Avatar className="h-12 w-12">
@@ -323,6 +324,15 @@ export default function PatientCardList({ patients }: { patients: Patient[] }) {
                                                 )}
                                             </div>
                                         </div>
+                                    </div>
+                                    <div className="p-4 overflow-y-auto">
+                                        <h2 className="text-xl font-semibold mb-2">
+                                            Prescriptions List
+                                        </h2>
+                                        <PrescriptionList
+                                            patientId={patient.id}
+                                            searchTerm="" 
+                                        />
                                     </div>
                                 </SheetContent>
                             </Sheet>

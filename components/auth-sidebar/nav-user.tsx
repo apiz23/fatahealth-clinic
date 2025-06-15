@@ -27,7 +27,7 @@ import { User } from "@/interface";
 
 export function NavUser({ user }: { user: User }) {
     const { isMobile } = useSidebar();
-	console.log(user);
+    console.log(user);
     const name = user.profile.full_name;
     const email = user.profile.email;
     const avatar = user.profile.avatar || "";
@@ -57,7 +57,7 @@ export function NavUser({ user }: { user: User }) {
                                 </AvatarFallback>
                             </Avatar>
                             <div className="grid flex-1 text-left text-sm leading-tight">
-                                <span className="truncate font-medium">
+                                <span className="truncate font-medium capitalize">
                                     {name}
                                 </span>
                                 <span className="text-muted-foreground truncate text-xs">
@@ -83,7 +83,7 @@ export function NavUser({ user }: { user: User }) {
                                     </AvatarFallback>
                                 </Avatar>
                                 <div className="grid flex-1 text-left text-sm leading-tight">
-                                    <span className="truncate font-medium">
+                                    <span className="truncate font-medium capitalize">
                                         {name}
                                     </span>
                                     <span className="text-muted-foreground truncate text-xs">

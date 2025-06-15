@@ -27,6 +27,7 @@ import { useNavigation } from "@/provider/nav-provider";
 import fhLogo from "@/public/fhLogo.svg";
 import { User } from "@/interface";
 import supabase from "@/lib/supabase";
+import { ModeToggle } from "../mode-toggle";
 
 const navConfig = {
     doctor: [
@@ -132,7 +133,7 @@ export function AppSidebar() {
 
     return (
         <Sidebar collapsible="offcanvas">
-            <SidebarHeader>
+            <SidebarHeader className="dark:bg-neutral-900 bg-white">
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton
@@ -156,7 +157,7 @@ export function AppSidebar() {
                 </SidebarMenu>
             </SidebarHeader>
 
-            <SidebarContent>
+            <SidebarContent className="dark:bg-neutral-900 bg-white">
                 <NavMain
                     items={mainNav.map((item) => ({
                         ...item,
@@ -164,8 +165,14 @@ export function AppSidebar() {
                     }))}
                 />
             </SidebarContent>
+            <div className="flex justify-between items-center gap-3 px-4 py-3 rounded-lg">
+                <span className="text-sm font-medium">
+                    Theme
+                </span>
+                <ModeToggle />
+            </div>
 
-            <SidebarFooter>
+            <SidebarFooter className="dark:bg-neutral-900 bg-white">
                 <NavUser user={user} />
             </SidebarFooter>
         </Sidebar>

@@ -5,22 +5,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
-	Dialog,
-	DialogContent,
-	DialogHeader,
-	DialogTitle,
-	DialogTrigger,
-} from "@/components/ui/dialog";
+	Sheet,
+	SheetContent,
+	SheetHeader,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheet";
 import { PlusIcon } from "lucide-react";
 import { toast } from "sonner";
 import supabase from "@/lib/supabase";
 import { Medicine } from "@/interface";
 
-interface AddMedicineDialogProps {
+interface AddMedicineSheetProps {
 	onMedicineAdded: (newMedicine: Medicine) => void;
 }
 
-export function AddMedicineDialog({ onMedicineAdded }: AddMedicineDialogProps) {
+export function AddMedicineSheet({ onMedicineAdded }: AddMedicineSheetProps) {
 	const [isOpen, setIsOpen] = useState(false);
 	const [newMedicine, setNewMedicine] = useState<Omit<Medicine, "id">>({
 		name: "",
@@ -71,17 +71,17 @@ export function AddMedicineDialog({ onMedicineAdded }: AddMedicineDialogProps) {
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={setIsOpen}>
-			<DialogTrigger asChild>
+		<Sheet open={isOpen} onOpenChange={setIsOpen}>
+			<SheetTrigger asChild>
 				<Button size="sm" className="gap-1">
 					<PlusIcon className="h-4 w-4" />
 					Add Medicine
 				</Button>
-			</DialogTrigger>
-			<DialogContent>
-				<DialogHeader>
-					<DialogTitle>Add New Medicine</DialogTitle>
-				</DialogHeader>
+			</SheetTrigger>
+			<SheetContent className="p-4">
+				<SheetHeader>
+					<SheetTitle>Add New Medicine</SheetTitle>
+				</SheetHeader>
 				<div className="grid gap-4 py-4">
 					<div className="grid gap-2">
 						<Label htmlFor="name">Name*</Label>
@@ -202,7 +202,7 @@ export function AddMedicineDialog({ onMedicineAdded }: AddMedicineDialogProps) {
 						Add Medicine
 					</Button>
 				</div>
-			</DialogContent>
-		</Dialog>
+			</SheetContent>
+		</Sheet>
 	);
 }

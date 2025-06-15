@@ -35,10 +35,10 @@ export default function DoctorLayout({
         <html lang="en">
             <body className={`${poppins.className} antialiased`}>
                 <Toaster richColors />
-                <SidebarProvider>
+                <SidebarProvider className="dark:bg-neutral-900">
                     <NavigationProvider>
                         <AppSidebar />
-                        <SidebarInset>
+                        <SidebarInset className="rounded-2xl bg-neutral-200 dark:bg-black m-2">
                             <SiteHeader />
                             <div className="p-6">
                                 <Toaster richColors />

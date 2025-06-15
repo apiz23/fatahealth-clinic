@@ -87,7 +87,7 @@ export interface User {
 export interface Appointment {
     id: string;
     scheduled_at: string;
-    status: "confirmed" | "pending" | "cancelled" | "scheduled" | null;
+    status: "done" | "cancelled" | "scheduled" | null;
     created_at?: string | null;
     name: string;
     email: string;

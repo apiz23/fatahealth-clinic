@@ -11,6 +11,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Loader2 } from "lucide-react";
+import { Button } from "../ui/button";
 
 interface Medicine {
     id: string;
@@ -31,13 +32,12 @@ export default function PrescriptionList({
     const [prescriptions, setPrescriptions] = useState<Prescription[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
-
     const [selectedPrescription, setSelectedPrescription] =
         useState<Prescription | null>(null);
     const [medicines, setMedicines] = useState<Medicine[]>([]);
     const [loadingMedicines, setLoadingMedicines] = useState(false);
     const [medicinesError, setMedicinesError] = useState<string | null>(null);
-
+    const [doctorName, setDoctorName] = useState<string | null>(null);
     const [dialogOpen, setDialogOpen] = useState(false);
 
     useEffect(() => {
@@ -59,7 +59,29 @@ export default function PrescriptionList({
         };
 
         if (patientId) fetchPrescriptions();
-    }, [patientId]);
+
+        const fetchDoctorName = async () => {
+            if (!selectedPrescription?.prescribed_by) {
+                setDoctorName(null);
+                return;
+            }
+
+            const { data, error } = await supabase
+                .from("fh_doctors")
+                .select("full_name")
+                .eq("user_id", selectedPrescription.prescribed_by)
+                .single();
+
+            if (error) {
+                console.error("Failed to fetch doctor name:", error);
+                setDoctorName(null);
+            } else {
+                setDoctorName(data?.full_name || "Unknown doctor");
+            }
+        };
+
+        fetchDoctorName();
+    }, [patientId, selectedPrescription]);
 
     const fetchMedicinesForPrescription = async (prescriptionId: string) => {
         setLoadingMedicines(true);
@@ -127,15 +149,14 @@ export default function PrescriptionList({
             {filtered.length === 0 ? (
                 <p>No prescriptions found for this patient.</p>
             ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filtered.map((p) => (
+                <div className="gap-6">
+                    {filtered.map((p, index) => (
                         <div
                             key={p.id}
-                            onClick={() => openDialog(p)}
-                            className="border dark:border-cyan-200 border-gray-200 rounded-xl shadow p-4 cursor-pointer hover:shadow-lg transition"
+                            className="p-4 rounded-lg shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between bg-gradient-to-b from-neutral-50 to-neutral-100 dark:from-neutral-900 dark:to-neutral-900/50 border-gray-200 dark:border-neutral-700"
                         >
                             <h3 className="text-lg font-semibold mb-2 text-black dark:text-white">
-                                {p.diagnosis || "No diagnosis"}
+                                {index + 1}. {p.diagnosis || "No diagnosis"}
                             </h3>
                             <div className="dark:text-gray-200">
                                 <p className="text-sm mb-1">
@@ -152,6 +173,14 @@ export default function PrescriptionList({
                                 <p className="text-sm">
                                     <b>Status:</b> {p.status || "Active"}
                                 </p>
+                            </div>
+                            <div className="flex justify-end">
+                                <Button
+                                    variant="outline"
+                                    onClick={() => openDialog(p)}
+                                >
+                                    View Details
+                                </Button>
                             </div>
                         </div>
                     ))}
@@ -176,6 +205,19 @@ export default function PrescriptionList({
                                         <p className="text-foreground">
                                             {selectedPrescription.diagnosis ||
                                                 "No diagnosis recorded"}
+                                        </p>
+                                    </div>
+                                </div>
+
+                                <div className="space-y-2">
+                                    <h4 className="text-sm font-medium text-muted-foreground">
+                                        Prescribed By
+                                    </h4>
+                                    <div className="rounded-md bg-muted p-3">
+                                        <p className="text-foreground whitespace-pre-line">
+                                            Dr{" "}
+                                            {doctorName ||
+                                                "No doctor prescribed"}
                                         </p>
                                     </div>
                                 </div>

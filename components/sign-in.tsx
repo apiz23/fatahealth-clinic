@@ -47,7 +47,6 @@ export function SignInForm({
                     id: string;
                     full_name: string;
                     phone: string;
-                    email: string;
                     address: string;
                 };
 
@@ -62,7 +61,7 @@ export function SignInForm({
                 if (role === "staff") {
                     const { data: staff, error: staffError } = await supabase
                         .from("fh_staffs")
-                        .select("id, full_name, phone, email, address")
+                        .select("id, full_name, phone, address")
                         .eq("user_id", users.id)
                         .single();
 
@@ -75,7 +74,7 @@ export function SignInForm({
                 } else {
                     const { data: doc } = await supabase
                         .from("fh_doctors")
-                        .select("id, full_name, phone, email, address")
+                        .select("id, full_name, phone, address")
                         .eq("user_id", users.id)
                         .single();
 
@@ -90,6 +89,7 @@ export function SignInForm({
                 const user = {
                     id: users.id,
                     role,
+                    email,
                     profile,
                     ...extraData,
                 };

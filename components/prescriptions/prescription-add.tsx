@@ -166,167 +166,179 @@ export default function AddPrescriptionSheet({
             <SheetTrigger asChild>
                 <Button>Add Prescription</Button>
             </SheetTrigger>
-            <SheetContent className="w-[600px] p-6">
+            <SheetContent className="min-h-[500px]">
                 <SheetHeader>
                     <SheetTitle>Add Prescription</SheetTitle>
                     <SheetDescription>
                         Fill out the form below to add a new prescription.
                     </SheetDescription>
                 </SheetHeader>
-                <div>
-                    <Label className="block mb-1 font-medium">Diagnosis</Label>
-                    <Input
-                        type="text"
-                        value={diagnosis}
-                        placeholder="Instructions..."
-                        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                            setDiagnosis(e.target.value)
-                        }
-                        className="w-full border rounded px-2 py-1"
-                    />
-                </div>
-                <div className="mt-4">
-                    <Label className="block mb-1 font-medium">Notes</Label>
-                    <textarea
-                        value={notes}
-                        onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
-                            setNotes(e.target.value)
-                        }
-                        placeholder="Additional instructions..."
-                        className="w-full border rounded px-2 py-1"
-                    />
-                </div>
-                <div className="mt-4">
-                    <Label className="block mb-1 font-medium">Medicines</Label>
-                    <Popover
-                        open={medicinePopoverOpen}
-                        onOpenChange={setMedicinePopoverOpen}
-                    >
-                        <PopoverTrigger asChild>
-                            <Button
-                                variant="outline"
-                                role="combobox"
-                                aria-expanded={medicinePopoverOpen}
-                                className="w-full justify-between"
-                            >
-                                {selectedMedicines.length > 0
-                                    ? selectedMedicines
-                                          .map(
-                                              (item) =>
-                                                  medicines.find(
-                                                      (m) => m.id === item.id
-                                                  )?.name
-                                          )
-                                          .join(", ")
-                                    : "Select medicines..."}
-                                <ChevronsUpDown className="opacity-50" />
-                            </Button>
-                        </PopoverTrigger>
-                        <PopoverContent
-                            align="start"
-                            className="min-w-[var(--radix-popover-trigger-width)] p-0"
-                        >
-                            <Command>
-                                <CommandInput
-                                    placeholder="Search medicines..."
-                                    value={searchTerm}
-                                    onValueChange={setSearchTerm}
-                                    className="h-9"
-                                />
-                                <CommandList>
-                                    <CommandEmpty>
-                                        No medicines found.
-                                    </CommandEmpty>
-                                    <CommandGroup>
-                                        {medicines
-                                            .filter((m) =>
-                                                m.name
-                                                    .toLowerCase()
-                                                    .includes(
-                                                        searchTerm.toLowerCase()
-                                                    )
-                                            )
-                                            .map((medicine) => (
-                                                <CommandItem
-                                                    key={medicine.id}
-                                                    value={medicine.id}
-                                                    onSelect={() =>
-                                                        toggleMedicine(
-                                                            medicine.id
-                                                        )
-                                                    }
-                                                >
-                                                    {medicine.name}
-                                                    <Check
-                                                        className={cn(
-                                                            "ml-auto",
-                                                            selectedMedicines.some(
-                                                                (m) =>
-                                                                    m.id ===
-                                                                    medicine.id
-                                                            )
-                                                                ? "opacity-100"
-                                                                : "opacity-0"
-                                                        )}
-                                                    />
-                                                </CommandItem>
-                                            ))}
-                                    </CommandGroup>
-                                </CommandList>
-                            </Command>
-                        </PopoverContent>
-                    </Popover>
-                    <div className="mt-2 space-y-1">
-                        {selectedMedicines.length === 0 ? (
-                            <span className="text-sm text-gray-600">None</span>
-                        ) : (
-                            selectedMedicines.map((m) => {
-                                const medName =
-                                    medicines.find((x) => x.id === m.id)
-                                        ?.name ?? m.id;
-                                return (
-                                    <div
-                                        key={m.id}
-                                        className="flex items-center gap-2 text-sm"
-                                    >
-                                        <span className="flex-1">
-                                            {medName}
-                                        </span>
-                                        <Input
-                                            type="number"
-                                            min={1}
-                                            value={m.qty}
-                                            onChange={(
-                                                e: React.ChangeEvent<HTMLInputElement>
-                                            ) =>
-                                                changeQty(m.id, +e.target.value)
-                                            }
-                                            className="w-16 rounded border px-1 py-0.5 text-right"
-                                        />
-                                    </div>
-                                );
-                            })
-                        )}
+                <div className="p-4">
+                    <div>
+                        <Label className="block mb-1 font-medium">
+                            Diagnosis
+                        </Label>
+                        <Input
+                            type="text"
+                            value={diagnosis}
+                            placeholder="Instructions..."
+                            onChange={(
+                                e: React.ChangeEvent<HTMLInputElement>
+                            ) => setDiagnosis(e.target.value)}
+                            className="w-full border rounded px-2 py-1"
+                        />
                     </div>
+                    <div className="mt-4">
+                        <Label className="block mb-1 font-medium">Notes</Label>
+                        <textarea
+                            value={notes}
+                            onChange={(
+                                e: React.ChangeEvent<HTMLTextAreaElement>
+                            ) => setNotes(e.target.value)}
+                            placeholder="Additional instructions..."
+                            className="w-full border rounded px-2 py-1"
+                        />
+                    </div>
+                    <div className="mt-4">
+                        <Label className="block mb-1 font-medium">
+                            Medicines
+                        </Label>
+                        <Popover
+                            open={medicinePopoverOpen}
+                            onOpenChange={setMedicinePopoverOpen}
+                        >
+                            <PopoverTrigger asChild>
+                                <Button
+                                    variant="outline"
+                                    role="combobox"
+                                    aria-expanded={medicinePopoverOpen}
+                                    className="w-full justify-between"
+                                >
+                                    {selectedMedicines.length > 0
+                                        ? selectedMedicines
+                                              .map(
+                                                  (item) =>
+                                                      medicines.find(
+                                                          (m) =>
+                                                              m.id === item.id
+                                                      )?.name
+                                              )
+                                              .join(", ")
+                                        : "Select medicines..."}
+                                    <ChevronsUpDown className="opacity-50" />
+                                </Button>
+                            </PopoverTrigger>
+                            <PopoverContent
+                                align="start"
+                                className="min-w-[var(--radix-popover-trigger-width)] p-0"
+                            >
+                                <Command>
+                                    <CommandInput
+                                        placeholder="Search medicines..."
+                                        value={searchTerm}
+                                        onValueChange={setSearchTerm}
+                                        className="h-9"
+                                    />
+                                    <CommandList>
+                                        <CommandEmpty>
+                                            No medicines found.
+                                        </CommandEmpty>
+                                        <CommandGroup>
+                                            {medicines
+                                                .filter((m) =>
+                                                    m.name
+                                                        .toLowerCase()
+                                                        .includes(
+                                                            searchTerm.toLowerCase()
+                                                        )
+                                                )
+                                                .map((medicine) => (
+                                                    <CommandItem
+                                                        key={medicine.id}
+                                                        value={medicine.id}
+                                                        onSelect={() =>
+                                                            toggleMedicine(
+                                                                medicine.id
+                                                            )
+                                                        }
+                                                    >
+                                                        {medicine.name}
+                                                        <Check
+                                                            className={cn(
+                                                                "ml-auto",
+                                                                selectedMedicines.some(
+                                                                    (m) =>
+                                                                        m.id ===
+                                                                        medicine.id
+                                                                )
+                                                                    ? "opacity-100"
+                                                                    : "opacity-0"
+                                                            )}
+                                                        />
+                                                    </CommandItem>
+                                                ))}
+                                        </CommandGroup>
+                                    </CommandList>
+                                </Command>
+                            </PopoverContent>
+                        </Popover>
+                        <div className="mt-2 space-y-1">
+                            {selectedMedicines.length === 0 ? (
+                                <span className="text-sm text-gray-600">
+                                    None
+                                </span>
+                            ) : (
+                                selectedMedicines.map((m) => {
+                                    const medName =
+                                        medicines.find((x) => x.id === m.id)
+                                            ?.name ?? m.id;
+                                    return (
+                                        <div
+                                            key={m.id}
+                                            className="flex items-center gap-2 text-sm"
+                                        >
+                                            <span className="flex-1">
+                                                {medName}
+                                            </span>
+                                            <Input
+                                                type="number"
+                                                min={1}
+                                                value={m.qty}
+                                                onChange={(
+                                                    e: React.ChangeEvent<HTMLInputElement>
+                                                ) =>
+                                                    changeQty(
+                                                        m.id,
+                                                        +e.target.value
+                                                    )
+                                                }
+                                                className="w-16 rounded border px-1 py-0.5 text-right"
+                                            />
+                                        </div>
+                                    );
+                                })
+                            )}
+                        </div>
+                    </div>
+                    <SheetFooter className="grid grid-cols-1 md:grid-cols-2 space-x-2 mt-4 p-0">
+                        <Button
+                            variant="outline"
+                            onClick={() => setSheetOpen(false)}
+                        >
+                            Cancel
+                        </Button>
+                        <Button
+                            onClick={handleSubmit}
+                            disabled={
+                                !diagnosis &&
+                                !notes &&
+                                selectedMedicines.length === 0
+                            }
+                        >
+                            Save
+                        </Button>
+                    </SheetFooter>
                 </div>
-                <SheetFooter className="flex justify-end space-x-2 mt-4">
-                    <Button
-                        variant="outline"
-                        onClick={() => setSheetOpen(false)}
-                    >
-                        Cancel
-                    </Button>
-                    <Button
-                        onClick={handleSubmit}
-                        disabled={
-                            !diagnosis &&
-                            !notes &&
-                            selectedMedicines.length === 0
-                        }
-                    >
-                        Save
-                    </Button>
-                </SheetFooter>
             </SheetContent>
         </Sheet>
     );

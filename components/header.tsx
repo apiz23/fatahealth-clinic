@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/drawer";
 import fhLogo from "@/public/fhLogo.svg";
 import Image from "next/image";
+import { ModeToggle } from "./mode-toggle";
 
 export const HeroHeader = () => {
     const [isScrolled, setIsScrolled] = React.useState(false);
@@ -75,6 +76,7 @@ export const HeroHeader = () => {
 
                         <div className="hidden w-full flex-wrap items-center justify-end space-y-8 lg:m-0 lg:flex lg:w-fit lg:gap-6 lg:space-y-0">
                             <div className="flex w-full flex-col space-y-3 sm:flex-row sm:gap-3 sm:space-y-0 md:w-fit">
+                                <ModeToggle />
                                 <Button
                                     asChild
                                     size="sm"

@@ -14,10 +14,12 @@ import {
     SheetDescription,
 } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
 export default function Page() {
     const [patients, setPatients] = useState<Patient[]>([]);
     const [isSheetOpen, setIsSheetOpen] = useState(false);
+    const [searchTerm, setSearchTerm] = useState("");
 
     useEffect(() => {
         const fetchPatients = async () => {
@@ -37,17 +39,28 @@ export default function Page() {
         fetchPatients();
     }, []);
 
+    const filteredPatients = patients.filter((patient) =>
+        `${patient.name} ${patient.email} ${patient.phone}`
+            .toLowerCase()
+            .includes(searchTerm.toLowerCase())
+    );
+
     return (
         <>
-            <div className="flex justify-between">
-                <h1 className="text-3xl font-bold mb-6">Patients</h1>       
-
+            <div className="flex justify-between items-center mb-6">
+                <Input
+                    type="text"
+                    placeholder="Search by name, email, or phone"
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="max-w-sm"
+                />
                 <Button onClick={() => setIsSheetOpen(true)}>
                     Add New Patient
                 </Button>
             </div>
 
-            <PatientTable patients={patients} />
+            <PatientTable patients={filteredPatients} />
 
             <Sheet open={isSheetOpen} onOpenChange={setIsSheetOpen}>
                 <SheetContent side="right" className="w-full sm:max-w-xl">
