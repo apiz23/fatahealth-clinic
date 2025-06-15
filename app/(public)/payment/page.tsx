@@ -26,6 +26,7 @@ export default function PaymentPage() {
     const [loading, setLoading] = useState(false);
     const [selectedBill, setSelectedBill] = useState<Bill | null>(null);
     const [paymentAmount, setPaymentAmount] = useState("");
+    const [isDialogOpen, setIsDialogOpen] = useState(false);
 
     const handleSearch = async () => {
         if (!ic.trim()) {
@@ -61,7 +62,8 @@ export default function PaymentPage() {
         }
     };
 
-    const handlePayment = () => {
+    const handlePayment = async (e: React.FormEvent) => {
+        e.preventDefault();
         if (!selectedBill || !paymentAmount) return;
 
         const amount = parseFloat(paymentAmount);
@@ -70,36 +72,40 @@ export default function PaymentPage() {
             return;
         }
 
-        const paymentPromise = (async () => {
-            const { error } = await supabase
-                .from("fh_bills")
-                .update({ payment_status: "paid" })
-                .eq("id", selectedBill.id);
+        const paymentPromise = new Promise<string>(async (resolve, reject) => {
+            try {
+                const { error } = await supabase
+                    .from("fh_bills")
+                    .update({ payment_status: "paid" })
+                    .eq("id", selectedBill.id);
 
-            if (error) throw error;
+                if (error) throw error;
+                await new Promise((resolve) => setTimeout(resolve, 2000));
+                const { data: billData, error: billErr } = await supabase
+                    .from("fh_bills")
+                    .select("*")
+                    .eq("patient_id", patient?.id)
+                    .order("created_at", { ascending: false });
 
-            setBills((prev) =>
-                prev.map((b) =>
-                    b.id === selectedBill.id
-                        ? { ...b, payment_status: "paid" }
-                        : b
-                )
-            );
+                if (billErr) throw billErr;
+                setBills((billData || []) as Bill[]);
 
-            setPaymentAmount("");
-            setSelectedBill(null);
+                setPaymentAmount("");
+                setSelectedBill(null);
 
-            return `Payment of RM ${amount.toFixed(2)} processed successfully`;
-        })();
+                resolve(
+                    `Payment of RM ${amount.toFixed(2)} processed successfully`
+                );
+                setIsDialogOpen(false);
+            } catch (error) {
+                reject(error);
+            }
+        });
 
         toast.promise(paymentPromise, {
             loading: "Processing payment...",
-            success: (msg) => msg,
+            success: (msg: string) => msg,
             error: "Failed to process payment",
-        });
-
-        paymentPromise.finally(() => {
-            console.log("Payment process finished");
         });
     };
 
@@ -109,27 +115,27 @@ export default function PaymentPage() {
                 <Link href="/" className="group">
                     <Button
                         variant="ghost"
-                        className="px-4 py-2 rounded-lg transition-all group-hover:bg-primary/10"
+                        className="px-2 sm:px-4 py-2 rounded-lg transition-all group-hover:bg-primary/10"
                         aria-label="Go back to home page"
                     >
-                        <ArrowLeftCircle className="h-8 w-8 text-primary group-hover:text-primary/80 transition-colors" />
+                        <ArrowLeftCircle className="h-6 w-6 sm:h-8 sm:w-8 text-primary group-hover:text-primary/80 transition-colors" />
                         <span className="ml-2 text-sm font-medium hidden sm:inline">
                             Back to Home
                         </span>
                     </Button>
                 </Link>
             </div>
-            <main className="max-w-3xl mx-auto p-6 space-y-6">
+            <main className="max-w-3xl mx-auto p-4 sm:p-6 space-y-4 sm:space-y-6">
                 <div className="space-y-2">
-                    <h1 className="text-2xl font-bold tracking-tight">
+                    <h1 className="text-xl sm:text-2xl font-bold tracking-tight">
                         Patient Billing Portal
                     </h1>
-                    <p className="text-muted-foreground">
+                    <p className="text-sm sm:text-base text-muted-foreground">
                         Search for patient bills by IC number
                     </p>
                 </div>
                 <Card>
-                    <CardContent className="pt-6">
+                    <CardContent className="pt-4 sm:pt-6">
                         <form
                             onSubmit={(e) => {
                                 e.preventDefault();
@@ -138,10 +144,13 @@ export default function PaymentPage() {
                             className="space-y-4"
                         >
                             <div className="space-y-2">
-                                <Label htmlFor="icNumber">
+                                <Label
+                                    htmlFor="icNumber"
+                                    className="text-sm sm:text-base"
+                                >
                                     Identification Number (XXXXXX-XX-XXXX)
                                 </Label>
-                                <div className="flex gap-3">
+                                <div className="flex flex-col sm:flex-row gap-3">
                                     <Input
                                         id="icNumber"
                                         placeholder="Enter patient IC number (e.g. 000000-00-0000)"
@@ -149,7 +158,11 @@ export default function PaymentPage() {
                                         onChange={(e) => setIc(e.target.value)}
                                         className="flex-1"
                                     />
-                                    <Button type="submit" disabled={loading}>
+                                    <Button
+                                        type="submit"
+                                        disabled={loading}
+                                        className="w-full sm:w-auto"
+                                    >
                                         {loading ? (
                                             <>
                                                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
@@ -166,41 +179,41 @@ export default function PaymentPage() {
                 </Card>
                 {patient && (
                     <Card>
-                        <CardHeader>
-                            <CardTitle className="text-lg">
+                        <CardHeader className="pb-2">
+                            <CardTitle className="text-base sm:text-lg">
                                 Patient Information
                             </CardTitle>
                         </CardHeader>
-                        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground">
+                        <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div className="space-y-1 sm:space-y-2">
+                                <p className="text-xs sm:text-sm text-muted-foreground">
                                     Full Name
                                 </p>
-                                <p className="font-medium">
+                                <p className="text-sm sm:text-base font-medium">
                                     {patient.name ?? "-"}
                                 </p>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground">
+                            <div className="space-y-1 sm:space-y-2">
+                                <p className="text-xs sm:text-sm text-muted-foreground">
                                     IC Number
                                 </p>
-                                <p className="font-medium">
+                                <p className="text-sm sm:text-base font-medium">
                                     {patient.ic ?? "-"}
                                 </p>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground">
+                            <div className="space-y-1 sm:space-y-2">
+                                <p className="text-xs sm:text-sm text-muted-foreground">
                                     Email
                                 </p>
-                                <p className="font-medium">
+                                <p className="text-sm sm:text-base font-medium">
                                     {patient.email ?? "-"}
                                 </p>
                             </div>
-                            <div className="space-y-2">
-                                <p className="text-sm text-muted-foreground">
+                            <div className="space-y-1 sm:space-y-2">
+                                <p className="text-xs sm:text-sm text-muted-foreground">
                                     Phone
                                 </p>
-                                <p className="font-medium">
+                                <p className="text-sm sm:text-base font-medium">
                                     {patient.phone_number ?? "-"}
                                 </p>
                             </div>
@@ -209,12 +222,15 @@ export default function PaymentPage() {
                 )}
                 {patient && (
                     <Card>
-                        <CardHeader>
+                        <CardHeader className="pb-2">
                             <div className="flex items-center justify-between">
-                                <CardTitle className="text-lg">
+                                <CardTitle className="text-base sm:text-lg">
                                     Billing History
                                 </CardTitle>
-                                <Badge variant="outline" className="px-3 py-1">
+                                <Badge
+                                    variant="outline"
+                                    className="px-2 sm:px-3 py-1 text-xs sm:text-sm"
+                                >
                                     {bills.length}{" "}
                                     {bills.length === 1 ? "Bill" : "Bills"}
                                 </Badge>
@@ -222,24 +238,24 @@ export default function PaymentPage() {
                         </CardHeader>
                         <CardContent>
                             {bills.length === 0 ? (
-                                <div className="py-8 text-center text-muted-foreground">
+                                <div className="py-6 sm:py-8 text-center text-sm sm:text-base text-muted-foreground">
                                     No bills found for this patient
                                 </div>
                             ) : (
-                                <div className="border rounded-lg overflow-hidden">
+                                <div className="border rounded-lg overflow-x-auto">
                                     <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-800">
                                         <thead className="bg-gray-50 dark:bg-gray-800">
                                             <tr>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                     Date
                                                 </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                     Amount (RM)
                                                 </th>
-                                                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                     Status
                                                 </th>
-                                                <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
+                                                <th className="px-3 sm:px-6 py-2 sm:py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider">
                                                     Actions
                                                 </th>
                                             </tr>
@@ -250,17 +266,17 @@ export default function PaymentPage() {
                                                     key={bill.id}
                                                     className="hover:bg-gray-50 dark:hover:bg-gray-800/50"
                                                 >
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm">
                                                         {new Date(
                                                             bill.created_at
                                                         ).toLocaleDateString()}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-sm">
                                                         {bill.total_amount.toFixed(
                                                             2
                                                         )}
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                                                         <Badge
                                                             variant={
                                                                 bill.payment_status ===
@@ -271,15 +287,20 @@ export default function PaymentPage() {
                                                                     ? "secondary"
                                                                     : "destructive"
                                                             }
-                                                            className="capitalize"
+                                                            className="capitalize text-xs"
                                                         >
                                                             {
                                                                 bill.payment_status
                                                             }
                                                         </Badge>
                                                     </td>
-                                                    <td className="px-6 py-4 whitespace-nowrap text-right">
-                                                        <Dialog>
+                                                    <td className="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+                                                        <Dialog
+                                                            open={isDialogOpen}
+                                                            onOpenChange={
+                                                                setIsDialogOpen
+                                                            }
+                                                        >
                                                             <DialogTrigger
                                                                 asChild
                                                             >
@@ -295,11 +316,15 @@ export default function PaymentPage() {
                                                                         bill.payment_status ===
                                                                         "paid"
                                                                     }
-                                                                    onClick={() =>
+                                                                    onClick={() => {
                                                                         setSelectedBill(
                                                                             bill
-                                                                        )
-                                                                    }
+                                                                        );
+                                                                        setIsDialogOpen(
+                                                                            true
+                                                                        );
+                                                                    }}
+                                                                    className="text-xs sm:text-sm"
                                                                 >
                                                                     {bill.payment_status ===
                                                                     "paid"
@@ -307,13 +332,13 @@ export default function PaymentPage() {
                                                                         : "Pay Now"}
                                                                 </Button>
                                                             </DialogTrigger>
-                                                            <DialogContent>
+                                                            <DialogContent className="sm:max-w-md">
                                                                 <DialogHeader>
-                                                                    <DialogTitle>
+                                                                    <DialogTitle className="text-base sm:text-lg">
                                                                         Process
                                                                         Payment
                                                                     </DialogTitle>
-                                                                    <DialogDescription>
+                                                                    <DialogDescription className="text-sm">
                                                                         Bill
                                                                         from{" "}
                                                                         {new Date(
@@ -327,7 +352,7 @@ export default function PaymentPage() {
                                                                             Total
                                                                             Amount
                                                                         </p>
-                                                                        <p className="font-medium">
+                                                                        <p className="text-base sm:text-lg font-medium">
                                                                             RM{" "}
                                                                             {bill.total_amount.toFixed(
                                                                                 2
@@ -340,7 +365,10 @@ export default function PaymentPage() {
                                                                         }
                                                                     >
                                                                         <div className="space-y-2">
-                                                                            <Label htmlFor="paymentAmount">
+                                                                            <Label
+                                                                                htmlFor="paymentAmount"
+                                                                                className="text-sm"
+                                                                            >
                                                                                 Payment
                                                                                 Amount
                                                                                 (RM)
@@ -366,11 +394,12 @@ export default function PaymentPage() {
                                                                                     2
                                                                                 )}
                                                                                 step="0.01"
+                                                                                className="text-sm sm:text-base"
                                                                             />
                                                                         </div>
                                                                         <Button
                                                                             type="submit"
-                                                                            className="w-full mt-4"
+                                                                            className="w-full mt-4 text-sm sm:text-base"
                                                                         >
                                                                             Process
                                                                             Payment

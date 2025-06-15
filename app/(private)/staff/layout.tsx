@@ -42,7 +42,6 @@ export default function DoctorLayout({
                             <SiteHeader />
                             <div className="p-6">
                                 <Toaster richColors />
-
                                 <SessionProvider>{children}</SessionProvider>
                             </div>
                         </SidebarInset>
