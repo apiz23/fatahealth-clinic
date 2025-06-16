@@ -31,7 +31,7 @@ export function NavUser({ user }: { user: User }) {
     const name = user.profile.full_name;
     const email = user.profile.email;
     const avatar = user.profile.avatar || "";
-    const role = user.role;
+    const role = user.role === "admin" ? "staff" : user.role;
 
     const getInitials = (name: string) =>
         name
