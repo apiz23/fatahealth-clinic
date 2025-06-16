@@ -141,8 +141,8 @@ export default function DashboardPage() {
                                 </p>
                             )}
                         </div>
-                        <div className="p-3 rounded-full bg-primary/10">
-                            <Hospital className="h-6 w-6 text-primary" />
+                        <div className="p-3 rounded-lg bg-blue-50 dark:bg-blue-900/30">
+                            <Hospital className="h-6 w-6 text-blue-600 dark:text-blue-300" />
                         </div>
                     </CardContent>
                 </Card>
@@ -161,8 +161,8 @@ export default function DashboardPage() {
                                 </p>
                             )}
                         </div>
-                        <div className="p-3 rounded-full bg-primary/10">
-                            <Calendar className="h-6 w-6 text-primary" />
+                        <div className="p-3 rounded-lg bg-green-50 dark:bg-green-900/30">
+                            <Calendar className="h-6 w-6 text-green-600 dark:text-green-300" />
                         </div>
                     </CardContent>
                 </Card>
