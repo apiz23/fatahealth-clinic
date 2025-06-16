@@ -33,10 +33,9 @@ export default function RootLayout({
             <body className={`${poppins.className} antialiased`}>
                 <ThemeProvider
                     attribute="class"
-                    defaultTheme="system"
+                    defaultTheme="dark"
                     enableSystem
                     disableTransitionOnChange
-                    storageKey="fatahealth-theme"
                 >
                     <Toaster richColors />
                     <CMD />

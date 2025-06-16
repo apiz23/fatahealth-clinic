@@ -21,6 +21,11 @@ import {
 } from "@/components/ui/chart";
 import { BarChart, Bar, XAxis, ResponsiveContainer } from "recharts";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+    ResizableHandle,
+    ResizablePanel,
+    ResizablePanelGroup,
+} from "@/components/ui/resizable";
 
 export default function DashboardPage() {
     const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -191,178 +196,184 @@ export default function DashboardPage() {
             </div>
 
             {/* Main Content */}
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                {/* Appointments */}
-                <div className="space-y-4">
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Today{"'"}s Schedule</CardTitle>
-                            <CardDescription>
-                                {todayAssignedAppointments.length} appointments
-                                today
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            {loading ? (
-                                Array.from({ length: 2 }).map((_, i) => (
-                                    <Skeleton
-                                        key={i}
-                                        className="h-20 w-full rounded-lg"
-                                    />
-                                ))
-                            ) : todayAssignedAppointments.length > 0 ? (
-                                todayAssignedAppointments.map(
-                                    (appointment, index) => (
-                                        <AppointmentCard
-                                            key={appointment.id}
-                                            appointment={appointment}
-                                            index={index}
-                                        />
-                                    )
-                                )
-                            ) : (
-                                <div className="text-center py-6 text-muted-foreground">
-                                    No appointments today
-                                </div>
-                            )}
-                        </CardContent>
-                    </Card>
-
-                    <Card>
-                        <CardHeader>
-                            <CardTitle>Upcoming Appointments</CardTitle>
-                            <CardDescription>
-                                Next {upcomingAppointments.length} appointments
-                            </CardDescription>
-                        </CardHeader>
-                        <CardContent className="space-y-3">
-                            {loading ? (
-                                Array.from({ length: 3 }).map((_, i) => (
-                                    <Skeleton
-                                        key={i}
-                                        className="h-20 w-full rounded-lg"
-                                    />
-                                ))
-                            ) : upcomingAppointments.length > 0 ? (
-                                upcomingAppointments
-                                    .slice(0, 3)
-                                    .map((appointment, index) => (
-                                        <AppointmentCard
-                                            key={appointment.id}
-                                            appointment={appointment}
-                                            index={index}
+            <ResizablePanelGroup
+                direction="horizontal"
+                className="min-h-fit rounded-lg border"
+            >
+                {/* Appointments Panel */}
+                <ResizablePanel defaultSize={40}>
+                    <div className="h-full space-y-4 p-4">
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Today{"'"}s Schedule</CardTitle>
+                                <CardDescription>
+                                    {todayAssignedAppointments.length}{" "}
+                                    appointments today
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                {loading ? (
+                                    Array.from({ length: 2 }).map((_, i) => (
+                                        <Skeleton
+                                            key={i}
+                                            className="h-20 w-full rounded-lg"
                                         />
                                     ))
+                                ) : todayAssignedAppointments.length > 0 ? (
+                                    todayAssignedAppointments.map(
+                                        (appointment, index) => (
+                                            <AppointmentCard
+                                                key={appointment.id}
+                                                appointment={appointment}
+                                                index={index}
+                                            />
+                                        )
+                                    )
+                                ) : (
+                                    <div className="text-center py-6 text-muted-foreground">
+                                        No appointments today
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+
+                        <Card>
+                            <CardHeader>
+                                <CardTitle>Upcoming Appointments</CardTitle>
+                                <CardDescription>
+                                    Next {upcomingAppointments.length}{" "}
+                                    appointments
+                                </CardDescription>
+                            </CardHeader>
+                            <CardContent className="space-y-3">
+                                {loading ? (
+                                    Array.from({ length: 3 }).map((_, i) => (
+                                        <Skeleton
+                                            key={i}
+                                            className="h-20 w-full rounded-lg"
+                                        />
+                                    ))
+                                ) : upcomingAppointments.length > 0 ? (
+                                    upcomingAppointments
+                                        .slice(0, 3)
+                                        .map((appointment, index) => (
+                                            <AppointmentCard
+                                                key={appointment.id}
+                                                appointment={appointment}
+                                                index={index}
+                                            />
+                                        ))
+                                ) : (
+                                    <div className="text-center py-6 text-muted-foreground">
+                                        No upcoming appointments
+                                    </div>
+                                )}
+                            </CardContent>
+                        </Card>
+                    </div>
+                </ResizablePanel>
+
+                <ResizableHandle />
+
+                {/* Chart Panel */}
+                <ResizablePanel defaultSize={60}>
+                    <Card className="h-fit">
+                        <CardHeader>
+                            <CardTitle>Patient Registrations</CardTitle>
+                            <CardDescription>
+                                Monthly patient registration trends
+                            </CardDescription>
+                        </CardHeader>
+                        <CardContent className="h-[calc(100%-120px)]">
+                            {loading ? (
+                                <Skeleton className="h-full w-full" />
                             ) : (
-                                <div className="text-center py-6 text-muted-foreground">
-                                    No upcoming appointments
+                                <div className="w-full h-full">
+                                    <ChartContainer
+                                        config={{
+                                            count: {
+                                                label: "Patients",
+                                                color: "var(--chart-1)",
+                                            },
+                                        }}
+                                    >
+                                        <ResponsiveContainer
+                                            width="100%"
+                                            height="100%"
+                                        >
+                                            <BarChart
+                                                data={patientsCountPerMonth}
+                                                margin={{
+                                                    top: 20,
+                                                    right: 10,
+                                                    left: 10,
+                                                    bottom: 20,
+                                                }}
+                                            >
+                                                <XAxis
+                                                    dataKey="month"
+                                                    tickLine={false}
+                                                    tickMargin={10}
+                                                    axisLine={false}
+                                                    tickFormatter={(value) =>
+                                                        value.slice(0, 3)
+                                                    }
+                                                />
+                                                <ChartTooltip
+                                                    cursor={false}
+                                                    content={
+                                                        <ChartTooltipContent
+                                                            hideLabel
+                                                        />
+                                                    }
+                                                />
+                                                <Bar
+                                                    dataKey="count"
+                                                    fill="#80DEEA"
+                                                    radius={[4, 4, 0, 0]}
+                                                    barSize={24}
+                                                />
+                                            </BarChart>
+                                        </ResponsiveContainer>
+                                    </ChartContainer>
                                 </div>
                             )}
                         </CardContent>
+                        <CardFooter className="px-4 py-3 border-t">
+                            <div className="flex flex-col w-full gap-2">
+                                <div className="flex justify-between items-start">
+                                    <div className="space-y-1">
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground">
+                                                Total Patients:
+                                            </span>
+                                            <span className="font-medium text-foreground">
+                                                {totalPatients}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-center gap-2 text-sm">
+                                            <span className="text-muted-foreground">
+                                                Monthly Average:
+                                            </span>
+                                            <span className="font-medium text-foreground">
+                                                {(
+                                                    totalPatients /
+                                                    patientsCountPerMonth.length
+                                                ).toFixed(1)}
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-1 px-2 py-1 bg-primary/10 rounded-md text-primary text-sm font-medium">
+                                        <TrendingUp className="h-4 w-4" />
+                                        <span>More patients this month</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </CardFooter>
                     </Card>
-                </div>
-
-                {/* Patient Chart */}
-                {/* Patient Chart */}
-                <Card className="lg:col-span-2">
-                    <CardHeader>
-                        <CardTitle>Patient Registrations</CardTitle>
-                        <CardDescription>
-                            Monthly patient registration trends
-                        </CardDescription>
-                    </CardHeader>
-                    <CardContent className="h-fit">
-                        {/* Fixed height and removed padding */}
-                        {loading ? (
-                            <Skeleton className="h-full w-full" />
-                        ) : (
-                            <div className="w-full h-full p-4">
-                                {" "}
-                                {/* Added padding container */}
-                                <ChartContainer
-                                    config={{
-                                        count: {
-                                            label: "Patients",
-                                            color: "var(--chart-1)",
-                                        },
-                                    }}
-                                >
-                                    <ResponsiveContainer
-                                        width="100%"
-                                        height="100%"
-                                    >
-                                        <BarChart
-                                            data={patientsCountPerMonth}
-                                            margin={{
-                                                top: 20,
-                                                right: 10,
-                                                left: 10,
-                                                bottom: 20,
-                                            }}
-                                        >
-                                            <XAxis
-                                                dataKey="month"
-                                                tickLine={false}
-                                                tickMargin={10}
-                                                axisLine={false}
-                                                tickFormatter={(value) =>
-                                                    value.slice(0, 3)
-                                                }
-                                            />
-                                            <ChartTooltip
-                                                cursor={false}
-                                                content={
-                                                    <ChartTooltipContent
-                                                        hideLabel
-                                                    />
-                                                }
-                                            />
-                                            <Bar
-                                                dataKey="count"
-                                                fill="#80DEEA"
-                                                radius={[4, 4, 0, 0]}
-                                                barSize={24}
-                                            />
-                                        </BarChart>
-                                    </ResponsiveContainer>
-                                </ChartContainer>
-                            </div>
-                        )}
-                    </CardContent>
-                    <CardFooter className="px-4 py-3 border-t">
-                        <div className="flex flex-col w-full gap-2">
-                            <div className="flex justify-between items-start">
-                                <div className="space-y-1">
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <span className="text-muted-foreground">
-                                            Total Patients:
-                                        </span>
-                                        <span className="font-medium text-foreground">
-                                            {totalPatients}
-                                        </span>
-                                    </div>
-                                    <div className="flex items-center gap-2 text-sm">
-                                        <span className="text-muted-foreground">
-                                            Monthly Average:
-                                        </span>
-                                        <span className="font-medium text-foreground">
-                                            {(
-                                                totalPatients /
-                                                patientsCountPerMonth.length
-                                            ).toFixed(1)}
-                                        </span>
-                                    </div>
-                                </div>
-
-                                <div className="flex items-center gap-1 px-2 py-1 bg-primary/10 rounded-md text-primary text-sm font-medium">
-                                    <TrendingUp className="h-4 w-4" />
-                                    <span>More patients this month</span>
-                                </div>
-                            </div>
-                        </div>
-                    </CardFooter>
-                </Card>
-            </div>
+                </ResizablePanel>
+            </ResizablePanelGroup>
         </div>
     );
 }

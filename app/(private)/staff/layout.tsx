@@ -1,3 +1,5 @@
+// app/staff/layout.tsx (or similar)
+
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "../../globals.css";
@@ -32,22 +34,19 @@ export default function StaffLayout({
     children: React.ReactNode;
 }>) {
     return (
-        <html lang="en">
-            <body className={`${poppins.className} antialiased`}>
-                <Toaster richColors />
-                <SidebarProvider className="dark:bg-neutral-900">
-                    <NavigationProvider>
-                        <AppSidebar />
-                        <SidebarInset className="rounded-2xl bg-neutral-200 dark:bg-black m-2">
-                            <SiteHeader />
-                            <div className="p-6">
-                                <Toaster richColors />
-                                <SessionProvider>{children}</SessionProvider>
-                            </div>
-                        </SidebarInset>
-                    </NavigationProvider>
-                </SidebarProvider>
-            </body>
-        </html>
+        <div className={`${poppins.className} antialiased`}>
+            <Toaster richColors />
+            <SidebarProvider className="dark:bg-neutral-900">
+                <NavigationProvider>
+                    <AppSidebar />
+                    <SidebarInset className="rounded-2xl bg-neutral-200 dark:bg-black m-2">
+                        <SiteHeader />
+                        <div className="p-6">
+                            <SessionProvider>{children}</SessionProvider>
+                        </div>
+                    </SidebarInset>
+                </NavigationProvider>
+            </SidebarProvider>
+        </div>
     );
 }

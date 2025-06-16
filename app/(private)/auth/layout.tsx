@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 import "../../globals.css";
-import { Toaster } from "sonner";
 
 const poppins = Poppins({
     weight: "500",
@@ -21,17 +20,10 @@ export const metadata: Metadata = {
     },
 };
 
-export default function PrivateLayout({
+export default function AuthLayout({
     children,
 }: Readonly<{
     children: React.ReactNode;
 }>) {
-    return (
-        <html lang="en">
-            <body className={`${poppins.className} antialiased`}>
-                <Toaster richColors />
-                {children}
-            </body>
-        </html>
-    );
+    return <div className={`${poppins.className}`}>{children}</div>;
 }
