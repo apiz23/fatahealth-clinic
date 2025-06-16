@@ -58,6 +58,25 @@ const navConfig = {
             icon: IconReportAnalytics,
         },
     ],
+    admin: [
+        { title: "Dashboard", url: "/staff/dashboard", icon: IconDashboard },
+        { title: "Patient", url: "/staff/patients", icon: IconUser },
+        {
+            title: "Appointments",
+            url: "/staff/appointments",
+            icon: IconCalendar,
+        },
+        {
+            title: "Medicines",
+            url: "/staff/medicines",
+            icon: IconReportAnalytics,
+        },
+        {
+            title: "Users",
+            url: "/admin/users",
+            icon: IconUser,
+        },
+    ],
 };
 
 export function AppSidebar() {
@@ -73,11 +92,16 @@ export function AppSidebar() {
 
             const parsedUser = JSON.parse(userData);
             const userId = parsedUser.id;
-            const role = parsedUser.role === "staff" ? "staff" : "doctor";
+            const role =
+                parsedUser.role === "staff"
+                    ? "staff"
+                    : parsedUser.role === "admin"
+                    ? "admin"
+                    : "doctor";
 
             let profileData;
 
-            if (role === "staff") {
+            if (role === "staff" || role === "admin") {
                 const { data, error } = await supabase
                     .from("fh_staffs")
                     .select("full_name, email, phone, address")
@@ -123,7 +147,13 @@ export function AppSidebar() {
                 },
             });
 
-            setMainNav(role === "staff" ? navConfig.staff : navConfig.doctor);
+            setMainNav(
+                role === "staff"
+                    ? navConfig.staff
+                    : role === "admin"
+                    ? navConfig.admin
+                    : navConfig.doctor
+            );
         };
 
         fetchUser();
@@ -166,9 +196,7 @@ export function AppSidebar() {
                 />
             </SidebarContent>
             <div className="flex justify-between items-center gap-3 px-4 py-3 rounded-lg">
-                <span className="text-sm font-medium">
-                    Theme
-                </span>
+                <span className="text-sm font-medium">Theme</span>
                 <ModeToggle />
             </div>
 

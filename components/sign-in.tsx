@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import supabase from "@/lib/supabase";
 
+type UserRole = "doctor" | "staff" | "admin";
+
 export function SignInForm({
     className,
     ...props
@@ -41,7 +43,7 @@ export function SignInForm({
                     throw new Error("Invalid username or password");
                 }
 
-                const role = users.role as "doctor" | "staff";
+                const role = users.role as UserRole;
                 type UserProfile = {
                     id: string;
                     full_name: string;
@@ -57,7 +59,7 @@ export function SignInForm({
                 let profile: UserProfile | null = null;
                 let extraData: ExtraData = {};
 
-                if (role === "staff") {
+                if (role === "staff" || role === "admin") {
                     const { data: staff, error: staffError } = await supabase
                         .from("fh_staffs")
                         .select("id, full_name, phone, address")
@@ -70,19 +72,21 @@ export function SignInForm({
 
                     profile = staff;
                     extraData = { staff_id: staff.id };
-                } else {
-                    const { data: doc } = await supabase
+                } else if (role === "doctor") {
+                    const { data: doc, error: docError } = await supabase
                         .from("fh_doctors")
                         .select("id, full_name, phone, address")
                         .eq("user_id", users.id)
                         .single();
 
-                    if (!doc) {
+                    if (docError || !doc) {
                         throw new Error("Doctor profile not found");
                     }
 
                     profile = doc;
                     extraData = { doctor_id: doc.id };
+                } else {
+                    throw new Error("Invalid user role");
                 }
 
                 const user = {
@@ -97,7 +101,11 @@ export function SignInForm({
                 sessionStorage.setItem("user", JSON.stringify(user));
                 sessionStorage.setItem("userRole", role);
 
-                router.replace(`/${role}/dashboard`);
+                const redirectPath =
+                    role === "admin"
+                        ? "/staff/dashboard"
+                        : `/${role}/dashboard`;
+                router.replace(redirectPath);
 
                 return { full_name: profile?.full_name || users.email };
             } catch (err) {
@@ -119,15 +127,15 @@ export function SignInForm({
         <div className={cn("flex flex-col gap-6", className)} {...props}>
             <Card>
                 <CardHeader className="text-center">
-                    <CardTitle className="text-2xl">FataHealth Admin</CardTitle>
-                    <CardDescription>Login Account</CardDescription>
+                    <CardTitle className="text-2xl">FataHealth</CardTitle>
+                    <CardDescription>Login to your account</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <form onSubmit={handleLogin}>
                         <div className="grid gap-6">
                             <div className="grid gap-6">
                                 <div className="grid gap-2">
-                                    <Label htmlFor="username">Username</Label>
+                                    <Label htmlFor="email">Email</Label>
                                     <Input
                                         id="email"
                                         type="email"

@@ -31,14 +31,15 @@ export default function RootLayout({
     return (
         <html lang="en" suppressHydrationWarning>
             <body className={`${poppins.className} antialiased`}>
-                <Toaster richColors />
-                <CMD />
                 <ThemeProvider
                     attribute="class"
                     defaultTheme="system"
                     enableSystem
                     disableTransitionOnChange
+                    storageKey="fatahealth-theme"
                 >
+                    <Toaster richColors />
+                    <CMD />
                     {children}
                 </ThemeProvider>
             </body>
